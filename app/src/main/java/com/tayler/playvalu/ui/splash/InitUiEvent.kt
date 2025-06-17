@@ -1,4 +1,4 @@
-package com.tayler.playvalu.ui
+package com.tayler.playvalu.ui.splash
 
 sealed class InitUiEvent {
     class NavigateToNext(value : Boolean) : InitUiEvent()

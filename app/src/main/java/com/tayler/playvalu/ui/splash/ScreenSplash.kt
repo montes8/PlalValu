@@ -1,26 +1,26 @@
-package com.tayler.playvalu.ui
+package com.tayler.playvalu.ui.splash
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.tayler.playvalu.R
+import com.tayler.playvalu.component.Screen
+import com.tayler.playvalu.ui.AppViewModel
+import com.tayler.playvalu.utils.TypographyBold
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -33,7 +33,7 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController  = rememb
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is InitUiEvent.NavigateToNext -> {
-                    //navController.navigate(Screen.LoginScreen.route)
+                    navController.navigate(Screen.HomeScreen.route)
                 }
                 else ->  {} } }
     }
@@ -48,21 +48,19 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController  = rememb
     ) {
 
         Column(  horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = stringResource(R.string.text_welcome)
-                , color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 25.sp,
-                style = MaterialTheme.typography.bodyMedium
+            Text(text = stringResource(R.string.text_welcome),
+                textAlign = TextAlign.Center,
+                style = TypographyBold.titleLarge
             )
-            Text(modifier = Modifier.padding(top = 10.dp), text = stringResource(R.string.text_title_splash),color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                style = MaterialTheme.typography.bodyMedium)
+            Text(modifier = Modifier.padding(top = 10.dp),
+                text = stringResource(R.string.text_title_splash),
+                textAlign = TextAlign.Center,
+                style = TypographyBold.titleMedium)
         }
-        Text(modifier = Modifier.padding(top = 10.dp),text = stringResource(R.string.app_name),
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            style = MaterialTheme.typography.bodyMedium)
+        Text(modifier = Modifier.padding(top = 10.dp),
+            text = stringResource(R.string.app_name),
+            textAlign = TextAlign.Center,
+            style = TypographyBold.titleLarge)
     }
 }
+

@@ -5,7 +5,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.tayler.playvalu.ui.ScreenSplash
+import com.tayler.playvalu.ui.home.ScreenHome
+import com.tayler.playvalu.ui.splash.ScreenSplash
 
 @Composable
 fun Navigation() {
@@ -21,7 +22,7 @@ fun Navigation() {
         }
 
         composable(route = Screen.HomeScreen.route) {
-            ScreenSplash(hiltViewModel(),navController)
+            ScreenHome(hiltViewModel(),navController)
         }
     }
 
