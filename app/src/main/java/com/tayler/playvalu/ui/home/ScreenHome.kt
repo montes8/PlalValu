@@ -12,32 +12,32 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.tayler.playvalu.component.Screen
-import com.tayler.playvalu.ui.AppViewModel
-import com.tayler.playvalu.ui.splash.InitUiEvent
-import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.tayler.playvalu.R
 import com.tayler.playvalu.model.MusicModel
+import com.tayler.playvalu.ui.AppViewModel
 import com.tayler.playvalu.utils.TypographyBoldDark
 
 @Composable
 fun ScreenHome(viewModel: AppViewModel, navController: NavController  = rememberNavController()){
+
+    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
+    var hasCameraPermission by remember { mutableStateOf(cameraPermissionState.status.isGranted) }
+
 
     Box{
         Column(modifier = Modifier.padding(top = 20.dp, end = 20.dp,
@@ -81,7 +81,7 @@ fun MusicItem(model: MusicModel){
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.padding(12.dp))
-            Column() {
+            Column {
                 Text(text = "Nombre", maxLines = 1,
                     style = TypographyBoldDark.titleSmall,
                     fontWeight = FontWeight.Bold

@@ -63,6 +63,8 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.48")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
+    implementation("com.google.accompanist:accompanist-permissions:0.29.0-alpha")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
