@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -104,14 +106,14 @@ fun ScreenHome(viewModel: AppViewModel, navController: NavController  = remember
 
 
     if(permission){
-        configLisMusic(viewModel)
+        ConfigLisMusic(viewModel)
     }else{
         when (PackageManager.PERMISSION_GRANTED) {
             ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) -> {
-                configLisMusic(viewModel)
+                ConfigLisMusic(viewModel)
             }
             else -> {
                 SideEffect {
@@ -127,14 +129,14 @@ fun ScreenHome(viewModel: AppViewModel, navController: NavController  = remember
 }
 
 @Composable
-fun configLisMusic(viewModel: AppViewModel){
+fun ConfigLisMusic(viewModel: AppViewModel){
     viewModel.loadMusic()
     Box{
-        Column(modifier = Modifier.padding(top = 20.dp, end = 20.dp,
-            start = 20.dp)) {
+        Column(modifier = Modifier.padding(top = 8.dp, end = 8.dp,
+            start = 8.dp)) {
             if (viewModel.uiStateListMusic.isNotEmpty()){
                 Column(modifier = Modifier.fillMaxSize()) {
-                    Text(text = "Listado de canciones")
+                    Text(text = "Listado de canciones", style = TypographyBoldDark.titleLarge)
                     LazyColumn(modifier = Modifier.fillMaxSize()){
                         items(viewModel.uiStateListMusic){music ->
                             MusicItem(music)
@@ -171,11 +173,11 @@ fun MusicItem(model: MusicModel){
             Spacer(modifier = Modifier.padding(12.dp))
             Column {
                 Text(text = "Nombre de cancion", maxLines = 1,
-                    style = TypographyBoldDark.titleSmall,
-                    fontWeight = FontWeight.Bold
+                    style = TypographyBoldDark.titleSmall
                 )
-                Text(text = model.name, maxLines = 5,
-                    style = TypographyBoldDark.titleSmall)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = model.name, maxLines = 2,
+                    style = TypographyBoldDark.labelLarge)
             }
         }
     }
