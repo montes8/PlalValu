@@ -1,5 +1,6 @@
 package com.tayler.playvalu.ui
 
+import android.os.Environment
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +29,6 @@ class AppViewModel @Inject constructor(
     init {
         execute {
             delay(500)
-            loadMusic()
         }
     }
 
@@ -41,8 +42,35 @@ class AppViewModel @Inject constructor(
 
     fun loadMusic(){
         Log.d("listamuca","loadlist")
+        val listFilter : ArrayList<MusicModel> = ArrayList()
         execute {
-            uiStateListMusic = arrayListOf(MusicModel(0,"La beriso","qwewqwew",true))
+            delay(1000)
+            val songs = getMusic(Environment.getExternalStorageDirectory())
+            Log.d("persimovalu",songs.toString())
+            for (item in songs){
+                listFilter.add(MusicModel(name = item.name,path = item.path))
+            }
+            uiStateListMusic = listFilter
         }
     }
 }
+
+
+
+fun getMusic(root: File): ArrayList<File> {
+    val filesMusic: ArrayList<File> = ArrayList()
+    val files = root.listFiles()
+    files?.let {
+        for (item in it) {
+            if (item.isDirectory && !item.isHidden) {
+                filesMusic.addAll(getMusic(item))
+            } else {
+                if (item.name.endsWith(".mp3")) {
+                    filesMusic.add(item)
+                }
+            }
+        }
+    }
+    return filesMusic
+}
+
