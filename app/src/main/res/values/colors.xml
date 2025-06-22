@@ -7,4 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="primary_Accent">@color/purple_500</color>
+    <color name="primary_secondary">@color/purple_500</color>
+    <color name="primary_pink">@color/purple_200</color>
+
+
+    <color name="ui_tay_black">#FF000000</color>
+    <color name="ui_tay_white">#FFFFFFFF</color>
+    <color name="ui_tay_gray">#BDBDBD</color>
+    <color name="ui_tay_gray_secondary">#EEEEEE</color>
 </resources>
