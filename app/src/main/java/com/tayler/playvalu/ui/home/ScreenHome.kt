@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -131,34 +133,39 @@ fun ScreenHome(viewModel: AppViewModel, navController: NavController = rememberN
             viewModel.loadMusic()
             if (viewModel.uiStateListMusic.isNotEmpty()) {
                 Box {
-                    ConfigLisMusic(viewModel){music ->
+                    ConfigLisMusic(viewModel){index ->
                         visibleMusic = true
-                        MediaPlayerSingleton.getInstanceMusic()?.apply {
-                            this.stop()
-                        }
-                        MediaPlayerSingleton.setMediaPlayerSingleton()
-                        MediaPlayerSingleton.getInstanceMusic()?.setDataSource(music.path)
-                        MediaPlayerSingleton.getInstanceMusic()?.prepare()
-                        MediaPlayerSingleton.getInstanceMusic()?.start()
-
+                        viewModel.uiStatePosition = index
+                        MediaPlayerSingleton.playStart(viewModel.uiStateListMusic[index].path)
                     }
                     if (visibleMusic) {
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp)
-                            .clickable {
-                                visibleMusic = false
-                                MediaPlayerSingleton.getInstanceMusic()?.apply {
-                                    this.stop()
-                                }
+                        Card(
+                            shape = RoundedCornerShape(20.dp), elevation = CardDefaults.cardElevation(
+                                defaultElevation = 10.dp
+                            ),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                                contentColor = Color.Blue
+                            ),
+                            border = BorderStroke(width = 2.dp,Color.Blue),
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .align(Alignment.BottomCenter)
+                        ){
+                            Box(modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp)
+                                .clickable {
+                                    visibleMusic = false
+                                    MediaPlayerSingleton.playStop()
+                                }) {
+                                Text(
+                                    text = "Nombre de cancion", maxLines = 1,
+                                    style = TypographyBoldDark.titleLarge
+                                )
                             }
-                            .background(Color.Blue)
-                            .align(Alignment.BottomCenter)) {
-                            Text(
-                                text = "Nombre de cancion", maxLines = 1,
-                                style = TypographyBoldDark.titleLarge
-                            )
                         }
+
                     }
                 }
             }
@@ -168,7 +175,7 @@ fun ScreenHome(viewModel: AppViewModel, navController: NavController = rememberN
 }
 
 @Composable
-fun ConfigLisMusic(viewModel: AppViewModel,onClick: (MusicModel) -> Unit) {
+fun ConfigLisMusic(viewModel: AppViewModel,onClick: (Int) -> Unit) {
     Column(
         modifier = Modifier.padding(
             top = 12.dp, end = 8.dp,
@@ -176,9 +183,9 @@ fun ConfigLisMusic(viewModel: AppViewModel,onClick: (MusicModel) -> Unit) {
         )
     ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(viewModel.uiStateListMusic) { music ->
-                MusicItem(music){
-                    onClick(music)
+            itemsIndexed(viewModel.uiStateListMusic) { index,music ->
+                MusicItem(music,index){
+                    onClick(it)
                 }
             }
         }
@@ -188,7 +195,7 @@ fun ConfigLisMusic(viewModel: AppViewModel,onClick: (MusicModel) -> Unit) {
 }
 
 @Composable
-fun MusicItem(model: MusicModel,onClick: (MusicModel) -> Unit) {
+fun MusicItem(model: MusicModel,position:Int,onClick: (Int) -> Unit) {
     Card(
         shape = RoundedCornerShape(20.dp), elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
@@ -204,7 +211,7 @@ fun MusicItem(model: MusicModel,onClick: (MusicModel) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    onClick(model)
+                    onClick(position)
                 }
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically) {

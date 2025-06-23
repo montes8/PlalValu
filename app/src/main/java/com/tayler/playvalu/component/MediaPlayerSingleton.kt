@@ -4,13 +4,22 @@ import android.media.MediaPlayer
 
 object MediaPlayerSingleton : MediaPlayer(){
 
-
     var mediaPlayerSingleton   :MediaPlayer?=null
 
-    fun setMediaPlayerSingleton(){
-        mediaPlayerSingleton = MediaPlayer()
+    fun playStart(path : String){
+        if(path.isNotEmpty()){
+            playStop()
+            mediaPlayerSingleton = MediaPlayer()
+            mediaPlayerSingleton?.setDataSource(path)
+            mediaPlayerSingleton?.prepare()
+            mediaPlayerSingleton?.start()
+        }
     }
 
-    fun getInstanceMusic () =
-        mediaPlayerSingleton
+    fun playStop(){
+        mediaPlayerSingleton.apply {
+            mediaPlayerSingleton?.stop()
+        }
+    }
+
 }
