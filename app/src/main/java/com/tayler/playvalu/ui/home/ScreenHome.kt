@@ -1,6 +1,7 @@
 package com.tayler.playvalu.ui.home
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -58,6 +59,7 @@ import com.tayler.playvalu.component.UiTayCToolBar
 import com.tayler.playvalu.model.MusicModel
 import com.tayler.playvalu.model.UiTayToolBarModel
 import com.tayler.playvalu.ui.AppViewModel
+import com.tayler.playvalu.ui.service.MusicService
 import com.tayler.playvalu.utils.TypographySubTitleGabbi
 import com.tayler.playvalu.utils.TypographyTitleBold
 import java.util.Locale
@@ -66,6 +68,7 @@ import java.util.Locale
 @Composable
 fun ScreenHome(viewModel: AppViewModel) {
     val context = LocalContext.current
+    val activity = (LocalContext.current as? Activity)
     var permission by remember { mutableStateOf(false) }
     var visibleMusic by remember { mutableStateOf(false) }
     var stateMusic by remember { mutableStateOf(true) }
@@ -152,7 +155,13 @@ fun ScreenHome(viewModel: AppViewModel) {
     Column {
         UiTayCToolBar(uiTayText = "Lista de tus canciones en PlayValu", uiTayModifier = UiTayToolBarModel(
             uTTypeEnd = true
-        )) {}
+        )) {flag ->
+            if (!flag){
+                activity?.startService(Intent(context, MusicService::class.java))
+                activity?.finish()
+            }
+
+        }
         if (permission) {
             viewModel.loadMusic()
             if (viewModel.uiStateListMusic.isNotEmpty()) {
