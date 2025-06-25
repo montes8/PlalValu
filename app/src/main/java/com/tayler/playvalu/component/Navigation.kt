@@ -22,7 +22,7 @@ fun Navigation() {
         }
 
         composable(route = Screen.HomeScreen.route) {
-            ScreenHome(hiltViewModel(),navController)
+            ScreenHome(hiltViewModel())
         }
     }
 

@@ -1,6 +1,7 @@
 package com.tayler.playvalu.component
 
 import android.media.MediaPlayer
+import kotlin.concurrent.thread
 
 object MediaPlayerSingleton : MediaPlayer(){
 
@@ -13,6 +14,7 @@ object MediaPlayerSingleton : MediaPlayer(){
             mediaPlayerSingleton?.setDataSource(path)
             mediaPlayerSingleton?.prepare()
             mediaPlayerSingleton?.start()
+
         }
     }
 
@@ -20,6 +22,33 @@ object MediaPlayerSingleton : MediaPlayer(){
         mediaPlayerSingleton.apply {
             mediaPlayerSingleton?.stop()
         }
+    }
+
+    fun playPause(){
+        mediaPlayerSingleton.apply {
+            mediaPlayerSingleton?.pause()
+        }
+    }
+    fun playMusic(){
+        mediaPlayerSingleton.apply {
+            mediaPlayerSingleton?.start()
+        }
+    }
+
+    fun playStateMusic(value : Boolean){
+            if (value){
+                playPause()
+            }else{
+                playMusic()
+            }
+    }
+
+    fun playDuration(): Int{
+        return mediaPlayerSingleton?.duration?:0
+    }
+
+    fun playCurrentPosition(): Int{
+        return mediaPlayerSingleton?.currentPosition?:0
     }
 
 }

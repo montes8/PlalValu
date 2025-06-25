@@ -5,10 +5,10 @@ import com.tayler.playvalu.R
 
 class UiTayToolBarModel (
     var uTHeight : Int = 56,
-    var uTBgColor : Int = R.color.ui_tay_black,
+    var uTBgColor : Int = R.color.primary_pink,
     var uTTextColor: Int = R.color.ui_tay_white,
     var uTIconStart : Int = R.drawable.uic_tay_ic_back,
-    var uTIconEnd : Int = R.drawable.uic_tay_ic_menu,
+    var uTIconEnd : Int = R.drawable.ui_ic_minimimize,
     var uTTextSize : Int = 16,
     var uTTextMarginHorizontal : Int = 0,
     var uTIconMarginStar : Int = 0,

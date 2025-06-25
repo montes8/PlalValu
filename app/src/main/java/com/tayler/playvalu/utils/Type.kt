@@ -30,10 +30,10 @@ val gabbiFont = FontFamily(
 )
 
 
-val TypographyBold = Typography(
+val TypographyTitleBold = Typography(
     titleLarge = TextStyle(
         fontFamily = flexBoldFont,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 40.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,
@@ -41,7 +41,7 @@ val TypographyBold = Typography(
     ),
     titleMedium = TextStyle(
         fontFamily = flexBoldFont,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
         lineHeight = 30.sp,
         letterSpacing = 0.5.sp,
@@ -49,37 +49,36 @@ val TypographyBold = Typography(
     ),
     titleSmall = TextStyle(
         fontFamily = flexBoldFont,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,
         color = Color.White
     ),
     labelLarge = TextStyle(
-        fontFamily = gabbiFont,
-        fontWeight = FontWeight.Normal,
+        fontFamily = flexBoldFont,
+        fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         color = Color.White
     ),
     labelMedium = TextStyle(
-        fontFamily = gabbiFont,
-        fontWeight = FontWeight.Normal,
+        fontFamily = flexBoldFont,
+        fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
         color = Color.White
     ),
     labelSmall = TextStyle(
-        fontFamily = gabbiFont,
-        fontWeight = FontWeight.Normal,
+        fontFamily = flexBoldFont,
+        fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         color = Color.White
     )
-
 )
 
-val TypographyBoldDark = Typography(
+val TypographyTitleBoldDark = Typography(
     titleLarge = TextStyle(
         fontFamily = flexBoldFont,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,
@@ -87,7 +86,7 @@ val TypographyBoldDark = Typography(
     ),
     titleMedium = TextStyle(
         fontFamily = flexBoldFont,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 25.sp,
         lineHeight = 30.sp,
         letterSpacing = 0.5.sp,
@@ -95,31 +94,97 @@ val TypographyBoldDark = Typography(
     ),
     titleSmall = TextStyle(
         fontFamily = flexBoldFont,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,
         color = Color.Black
     ),
+    bodyLarge = TextStyle(
+        fontFamily = flexBoldFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp,
+        color = Color.Black
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = flexBoldFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        lineHeight = 22.sp,
+        color = Color.Black
+    ),
+    bodySmall = TextStyle(
+        fontFamily = flexBoldFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        color = Color.Black
+    ),
     labelLarge = TextStyle(
-        fontFamily = gabbiFont,
-        fontWeight = FontWeight.Normal,
+        fontFamily = flexBoldFont,
+        fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 20.sp,
         color = Color.Black
     ),
     labelMedium = TextStyle(
-        fontFamily = gabbiFont,
-        fontWeight = FontWeight.Normal,
+        fontFamily = flexBoldFont,
+        fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
         lineHeight = 18.sp,
         color = Color.Black
     ),
     labelSmall = TextStyle(
-        fontFamily = gabbiFont,
-        fontWeight = FontWeight.Normal,
+        fontFamily = flexBoldFont,
+        fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         lineHeight = 16.sp,
         color = Color.Black
+    )
+)
+
+val TypographySubTitleGabbi = Typography(
+    titleLarge = TextStyle(
+        fontFamily = gabbiFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp,
+        color = Color.White
+    ),
+    titleMedium = TextStyle(
+        fontFamily = gabbiFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        lineHeight = 22.sp,
+        color = Color.White
+    ),
+    titleSmall = TextStyle(
+        fontFamily = gabbiFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        color = Color.White
+    ),
+    labelLarge = TextStyle(
+        fontFamily = gabbiFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp,
+        color = Color.White
+    ),
+    labelMedium = TextStyle(
+        fontFamily = gabbiFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        lineHeight = 22.sp,
+        color = Color.White
+    ),
+    labelSmall = TextStyle(
+        fontFamily = gabbiFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        color = Color.White
     )
 )

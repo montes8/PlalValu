@@ -20,7 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.tayler.playvalu.R
 import com.tayler.playvalu.component.Screen
 import com.tayler.playvalu.ui.AppViewModel
-import com.tayler.playvalu.utils.TypographyBold
+import com.tayler.playvalu.utils.TypographyTitleBold
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -50,17 +50,17 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController  = rememb
         Column(  horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = stringResource(R.string.text_welcome),
                 textAlign = TextAlign.Center,
-                style = TypographyBold.titleLarge
+                style = TypographyTitleBold.titleLarge
             )
             Text(modifier = Modifier.padding(top = 10.dp),
                 text = stringResource(R.string.text_title_splash),
                 textAlign = TextAlign.Center,
-                style = TypographyBold.titleMedium)
+                style = TypographyTitleBold.titleMedium)
         }
         Text(modifier = Modifier.padding(top = 10.dp),
             text = stringResource(R.string.app_name),
             textAlign = TextAlign.Center,
-            style = TypographyBold.titleLarge)
+            style = TypographyTitleBold.titleLarge)
     }
 }
 

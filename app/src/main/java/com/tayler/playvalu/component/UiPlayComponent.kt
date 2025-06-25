@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -32,7 +33,8 @@ fun UiTayCToolBar(uiTayText : String = "",
                 uiTayClick(true)
             },modifier = Modifier
                 .align(Alignment.CenterStart).padding(start = uiTayModifier.uTIconMarginStar.dp)) {
-                Icon(painter = painterResource(id = uiTayModifier.uTIconStart), contentDescription = "uiTayBackIcon"
+                Icon(painter = painterResource(id = uiTayModifier.uTIconStart),
+                    tint = Color.Unspecified,contentDescription = "uiTayBackIcon"
                 )
             }
         }
@@ -48,7 +50,9 @@ fun UiTayCToolBar(uiTayText : String = "",
                 uiTayClick(false)
             }, modifier = Modifier
                 .align(Alignment.CenterEnd).padding(start = uiTayModifier.uTIconMarginEnd.dp)) {
-                Icon( painter = painterResource(id = uiTayModifier.uTIconEnd), contentDescription =
+                Icon( painter = painterResource(id = uiTayModifier.uTIconEnd),
+                    tint = Color.Unspecified,
+                    contentDescription =
                     "uiTayMenuIcon")
             }
         }
