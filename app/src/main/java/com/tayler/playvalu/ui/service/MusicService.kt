@@ -58,12 +58,8 @@ class MusicService : Service() {
     private var windowFlag = 0
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showOverlay() {
-        windowType = if (Build.VERSION.SDK_INT <= 25) {
-            @Suppress("DEPRECATION")
-            WindowManager.LayoutParams.TYPE_PHONE
-        } else {
+        windowType =
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        }
         windowFlag = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or

@@ -62,6 +62,7 @@ import com.tayler.playvalu.ui.AppViewModel
 import com.tayler.playvalu.ui.service.MusicService
 import com.tayler.playvalu.utils.TypographySubTitleGabbi
 import com.tayler.playvalu.utils.TypographyTitleBold
+import com.tayler.playvalu.utils.permission.PermissionManager
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -157,8 +158,10 @@ fun ScreenHome(viewModel: AppViewModel) {
             uTTypeEnd = true
         )) {flag ->
             if (!flag){
-                activity?.startService(Intent(context, MusicService::class.java))
-                activity?.finish()
+                PermissionManager.checkOverlayPermission(context) {
+                    activity?.startService(Intent(context, MusicService::class.java))
+                    activity?.finish()
+                }
             }
 
         }
