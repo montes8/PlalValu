@@ -1,15 +1,7 @@
 package com.tayler.playvalu.ui.home
 
-import android.Manifest
-import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
-import android.os.Environment
-import android.provider.Settings
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,7 +26,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -49,9 +40,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import com.tayler.playvalu.R
 import com.tayler.playvalu.component.MediaPlayerSingleton
 import com.tayler.playvalu.component.MediaPlayerSingleton.playStateMusic
@@ -62,41 +52,18 @@ import com.tayler.playvalu.ui.AppViewModel
 import com.tayler.playvalu.ui.service.MusicService
 import com.tayler.playvalu.utils.TypographySubTitleGabbi
 import com.tayler.playvalu.utils.TypographyTitleBold
+import com.tayler.playvalu.utils.getActivityOrNull
 import com.tayler.playvalu.utils.permission.PermissionManager
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenHome(viewModel: AppViewModel) {
     val context = LocalContext.current
-    val activity = (LocalContext.current as? Activity)
-    var permission by remember { mutableStateOf(false) }
+    val activity = context.getActivityOrNull()
     var visibleMusic by remember { mutableStateOf(false) }
     var stateMusic by remember { mutableStateOf(true) }
     var sliderPosition by remember { mutableFloatStateOf(0f) }
     var musicDuration by remember { mutableIntStateOf(0) }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions(),
-        onResult = { isGranted ->
-            if (
-                isGranted[Manifest.permission.READ_EXTERNAL_STORAGE] == true
-
-            ) {
-                permission = true
-            } else {
-                Log.e("MainActivity", "ERROR PERMISSION NOT GRANTED")
-                Log.e(
-                    "MainActivity",
-                    "READ_EXTERNAL_STORAGE = ${isGranted.get(Manifest.permission.READ_EXTERNAL_STORAGE)}"
-                )
-                Log.e(
-                    "MainActivity",
-                    "WRITE_EXTERNAL_STORAGE = ${isGranted.get(Manifest.permission.WRITE_EXTERNAL_STORAGE)}"
-                )
-            }
-        }
-    )
 
     val mylamda = Thread({
         Log.d("tagprogree","mylamda")
@@ -113,69 +80,27 @@ fun ScreenHome(viewModel: AppViewModel) {
         }
     })
 
+    viewModel.loadMusic()
+
     if(visibleMusic){ mylamda.start() }else{ mylamda.interrupt()}
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // if android 11+ request MANAGER_EXTERNAL_STORAGE
-        if (!Environment.isExternalStorageManager()) { // check if we already have permission
-            val uri = String.format(
-                Locale.ENGLISH,
-                "package:%s",
-                context.packageName
-            ).toUri()
-            context.startActivity(
-                Intent(
-                    Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                    uri
-                )
-            )
-        } else {
-            Log.d("persimovalu", "otorgado por el usuario mayo R")
-            permission = true
-
-        }
-    } else {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED
-        ) { // ch
-            // eck if we already have permission
-            SideEffect {
-                launcher.launch(
-                    arrayOf(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    )
-                )
-            }
-
-        } else {
-            permission = true
-            Log.d("persimovalu", "otorgado por el usuario")
-        }
-    }
-
     Column {
-        UiTayCToolBar(uiTayText = "Lista de tus canciones en PlayValu", uiTayModifier = UiTayToolBarModel(
+        UiTayCToolBar(uiTayText = stringResource(R.string.tb_title_home), uiTayModifier = UiTayToolBarModel(
             uTTypeEnd = true
-        )) {flag ->
-            if (!flag){
-                PermissionManager.checkOverlayPermission(context) {
+        )) {
+            PermissionManager.checkOverlayPermission(context) {
                     activity?.startService(Intent(context, MusicService::class.java))
                     activity?.finish()
-                }
             }
-
         }
-        if (permission) {
-            viewModel.loadMusic()
-            if (viewModel.uiStateListMusic.isNotEmpty()) {
+
+        if (viewModel.uiStateDataMusic.listMusic.isNotEmpty()) {
                 Box {
                     ConfigLisMusic(viewModel) { index ->
                         visibleMusic = true
                         viewModel.uiStatePosition = index
-                        viewModel.uiStateMusic = viewModel.uiStateListMusic[index]
+                        viewModel.uiStateMusic = viewModel.uiStateDataMusic.listMusic[index]
                         MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
                         musicDuration = MediaPlayerSingleton.playDuration()/100
-                        Log.d("tagprogree",musicDuration.toString())
                     }
                     if (visibleMusic) {
                         Card(
@@ -241,7 +166,7 @@ fun ScreenHome(viewModel: AppViewModel) {
                                                     musicDuration = 0
                                                     viewModel.uiStatePosition = positionCurrent - 1
                                                     viewModel.uiStateMusic =
-                                                        viewModel.uiStateListMusic[viewModel.uiStatePosition]
+                                                        viewModel.uiStateDataMusic.listMusic[viewModel.uiStatePosition]
                                                     MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
                                                     musicDuration = MediaPlayerSingleton.playDuration()/100
                                                 }
@@ -269,10 +194,10 @@ fun ScreenHome(viewModel: AppViewModel) {
                                                 sliderPosition = 0f
                                                 musicDuration = 0
                                                 var positionCurrent = viewModel.uiStatePosition
-                                                if (positionCurrent < viewModel.uiStateListMusic.size - 1) {
+                                                if (positionCurrent < viewModel.uiStateDataMusic.listMusic.size - 1) {
                                                     viewModel.uiStatePosition = positionCurrent + 1
                                                     viewModel.uiStateMusic =
-                                                        viewModel.uiStateListMusic[viewModel.uiStatePosition]
+                                                        viewModel.uiStateDataMusic.listMusic[viewModel.uiStatePosition]
                                                     MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
                                                     musicDuration = MediaPlayerSingleton.playDuration()/100
                                                 }
@@ -340,7 +265,11 @@ fun ScreenHome(viewModel: AppViewModel) {
                 }
             }
         }
-    }
+
+}
+
+@Composable
+private fun ConfigReproduceView(){
 
 }
 
@@ -353,7 +282,7 @@ fun ConfigLisMusic(viewModel: AppViewModel, onClick: (Int) -> Unit) {
         )
     ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            itemsIndexed(viewModel.uiStateListMusic) { index, music ->
+            itemsIndexed(viewModel.uiStateDataMusic.listMusic) { index, music ->
                 MusicItem(music, index) {
                     onClick(it)
                 }
@@ -387,11 +316,12 @@ fun MusicItem(model: MusicModel, position: Int, onClick: (Int) -> Unit) {
             verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painterResource(R.drawable.ic_music),
+                modifier = Modifier.weight(0.6f),
                 contentDescription = "",
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.padding(12.dp))
-            Column {
+            Column( modifier = Modifier.weight(6f),) {
                 Text(
                     text = "Nombre de cancion", maxLines = 1,
                     color = colorResource(R.color.primary_Accent),
@@ -404,6 +334,12 @@ fun MusicItem(model: MusicModel, position: Int, onClick: (Int) -> Unit) {
                     style = TypographySubTitleGabbi.titleMedium
                 )
             }
+            Image(
+                painterResource(R.drawable.ic_skip_next),
+                modifier = Modifier.weight(1f),
+                contentDescription = "",
+                contentScale = ContentScale.Crop
+            )
         }
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -21,13 +22,13 @@ import com.tayler.playvalu.R
 import com.tayler.playvalu.component.Screen
 import com.tayler.playvalu.ui.AppViewModel
 import com.tayler.playvalu.utils.TypographyTitleBold
+import com.tayler.playvalu.utils.permission.PermissionManager
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun ScreenSplash(viewModel: AppViewModel, navController: NavController  = rememberNavController()){
+fun ScreenSplash(viewModel: AppViewModel, navController: NavController = rememberNavController()) {
 
-
-    viewModel.loadValidateLogin()
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -35,32 +36,49 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController  = rememb
                 is InitUiEvent.NavigateToNext -> {
                     navController.navigate(Screen.HomeScreen.route)
                 }
-                else ->  {} } }
+                else -> {
+
+                }
+            }
+        }
     }
 
-    Column(modifier = Modifier.fillMaxSize().
-    paint(
-        painterResource(id = R.drawable.background_splash),contentScale
-    = ContentScale.FillBounds
-    ),
+    PermissionManager.CheckFilePermission(context) { isGranted ->
+        if (isGranted) {
+            viewModel.loadValidateLogin()
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .paint(
+                painterResource(id = R.drawable.background_splash), contentScale
+                = ContentScale.FillBounds
+            ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Column(  horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = stringResource(R.string.text_welcome),
-                textAlign = TextAlign.Center,
-                style = TypographyTitleBold.titleLarge
-            )
-            Text(modifier = Modifier.padding(top = 10.dp),
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
                 text = stringResource(R.string.text_title_splash),
                 textAlign = TextAlign.Center,
-                style = TypographyTitleBold.titleMedium)
+                style = TypographyTitleBold.titleMedium
+            )
+            Text(
+                modifier = Modifier.padding(top = 20.dp),
+                text = stringResource(R.string.text_sub_title_splash),
+                textAlign = TextAlign.Center,
+                style = TypographyTitleBold.titleMedium
+            )
         }
-        Text(modifier = Modifier.padding(top = 10.dp),
+        Text(
+            modifier = Modifier.padding(top = 20.dp),
             text = stringResource(R.string.app_name),
             textAlign = TextAlign.Center,
-            style = TypographyTitleBold.titleLarge)
+            style = TypographyTitleBold.titleLarge
+        )
     }
 }
 

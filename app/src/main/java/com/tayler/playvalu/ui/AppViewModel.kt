@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.tayler.playvalu.model.MusicModel
+import com.tayler.playvalu.ui.home.MusicUiState
 import com.tayler.playvalu.ui.splash.InitUiEvent
 import com.tayler.playvalu.usecases.AppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,15 +26,13 @@ class AppViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<InitUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    var uiStateListMusic by mutableStateOf(listOf<MusicModel>())
+    var uiStateDataMusic by mutableStateOf(MusicUiState())
+
     var uiStateMusic by mutableStateOf(MusicModel())
     var uiStatePosition by mutableIntStateOf(0)
 
-    init {
-        execute {
-            delay(500)
-        }
-    }
+
+    var uiStateLoading by mutableStateOf(true)
 
     fun loadValidateLogin(){
         execute {
@@ -46,12 +45,11 @@ class AppViewModel @Inject constructor(
     fun loadMusic(){
         val listFilter : ArrayList<MusicModel> = ArrayList()
         execute {
-            delay(1000)
             val songs = getMusic(Environment.getExternalStorageDirectory())
             for (item in songs){
                 listFilter.add(MusicModel(name = item.name,path = item.path))
             }
-            uiStateListMusic = listFilter
+            uiStateDataMusic = uiStateDataMusic.copy(listMusic = listFilter)
         }
     }
 }
