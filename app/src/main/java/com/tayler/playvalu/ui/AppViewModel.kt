@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.tayler.playvalu.model.MusicModel
 import com.tayler.playvalu.ui.home.MusicUiState
@@ -32,7 +33,12 @@ class AppViewModel @Inject constructor(
     var uiStatePosition by mutableIntStateOf(0)
 
 
-    var uiStateLoading by mutableStateOf(true)
+    var musicDuration by mutableIntStateOf(0)
+    var sliderPosition by mutableStateOf(0f)
+    var stateMusic by  mutableStateOf(true)
+    var textProgress by  mutableStateOf("00:00")
+    var visibleMusic by  mutableStateOf(false)
+
 
     fun loadValidateLogin(){
         execute {
