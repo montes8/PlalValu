@@ -1,10 +1,13 @@
 package com.tayler.playvalu.ui.service
 
+import android.R.attr.onClick
 import android.annotation.SuppressLint
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import android.view.MotionEvent
@@ -14,7 +17,13 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -22,7 +31,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
@@ -34,6 +45,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.tayler.playvalu.R
+import com.tayler.playvalu.component.MediaPlayerSingleton
+import com.tayler.playvalu.ui.service.ComposeViewCreate
 import kotlin.math.abs
 
 class MusicService : Service() {
@@ -56,6 +69,7 @@ class MusicService : Service() {
 
     private var windowType = 0
     private var windowFlag = 0
+    @SuppressLint("ImplicitSamInstance")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showOverlay() {
         windowType =
@@ -75,10 +89,10 @@ class MusicService : Service() {
 
         floatingView = ComposeView(this)
         floatingView.setContent {
-            ComposeView(
-                clickScope = {
-                    Toast.makeText(this, "Bye bye ComposeView", Toast.LENGTH_LONG).show()
-                    stopSelf()
+            ComposeViewCreate(
+                clickClose = {
+                    MediaPlayerSingleton.playStop()
+                    stopService(Intent(this, MusicService::class.java))
                 }
             )
         }
@@ -91,7 +105,10 @@ class MusicService : Service() {
         floatingView.setViewTreeSavedStateRegistryOwner(lifecycleOwner)
 
         windowManager.addView(floatingView, params)
-        implementTouchListenerToFloatingWidgetView()
+        Handler().postDelayed({
+            implementTouchListenerToFloatingWidgetView()
+        },1000)
+
     }
 
     override fun onDestroy() {
@@ -155,13 +172,28 @@ class MusicService : Service() {
     }
 }
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
-fun ComposeView(
-    clickScope: () -> Unit = {}
+fun ComposeViewCreate(
+    clickClose: () -> Unit = {}
 ) {
-    Image(
-        painterResource(R.drawable.ic_music),
-        contentDescription = "",
-        contentScale = ContentScale.Crop
-    )
+
+    Box(modifier = Modifier.size(52.dp)){
+        Image(
+            painterResource(R.drawable.ic_close),
+            modifier = Modifier.size(18.dp).clickable{
+                clickClose()
+            }.align(Alignment.TopEnd),
+            contentDescription = "",
+            contentScale = ContentScale.Crop
+        )
+        Image(
+            painterResource(R.drawable.ui_ic_music_two),
+            modifier = Modifier.size(72.dp).align(Alignment.TopCenter),
+            contentDescription = "",
+            contentScale = ContentScale.Crop
+        )
+    }
+
+
 }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
@@ -52,6 +53,7 @@ import com.tayler.playvalu.ui.AppViewModel
 import com.tayler.playvalu.ui.service.MusicService
 import com.tayler.playvalu.utils.TypographySubTitleGabbi
 import com.tayler.playvalu.utils.TypographyTitleBold
+import com.tayler.playvalu.utils.formatTimePlayer
 import com.tayler.playvalu.utils.getActivityOrNull
 import com.tayler.playvalu.utils.permission.PermissionManager
 
@@ -65,24 +67,31 @@ fun ScreenHome(viewModel: AppViewModel) {
     var sliderPosition by remember { mutableFloatStateOf(0f) }
     var musicDuration by remember { mutableIntStateOf(0) }
 
+    var textProgress by remember { mutableStateOf("00:00") }
+
+    var completeMusic by remember { mutableStateOf(false) }
     val mylamda = Thread({
-        Log.d("tagprogree","mylamda")
-        sliderPosition = 0f
-        while (sliderPosition < musicDuration) {
-            try {
-                Thread.sleep((500).toLong())
-                sliderPosition = (MediaPlayerSingleton.playCurrentPosition()/100).toFloat()
-                Log.d("tagprogree",sliderPosition.toString())
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.d("tagprogree","error")
-            }
+        while (sliderPosition < musicDuration -10) {
+            Thread.sleep((1000).toLong())
+                try {
+                    completeMusic=true
+                    sliderPosition = (MediaPlayerSingleton.playCurrentPosition()/100).toFloat()
+                    textProgress = formatTimePlayer(MediaPlayerSingleton.playCurrentPosition())
+                    Log.d("tagprogree","${sliderPosition}} ----  ${musicDuration}}")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.d("tagprogree","error")
+                }
         }
     })
-
+    
     viewModel.loadMusic()
 
-    if(visibleMusic){ mylamda.start() }else{ mylamda.interrupt()}
+    if(visibleMusic){
+        mylamda.start()
+    }else{
+        mylamda.interrupt()
+    }
     Column {
         UiTayCToolBar(uiTayText = stringResource(R.string.tb_title_home), uiTayModifier = UiTayToolBarModel(
             uTTypeEnd = true
@@ -97,6 +106,7 @@ fun ScreenHome(viewModel: AppViewModel) {
                 Box {
                     ConfigLisMusic(viewModel) { index ->
                         visibleMusic = true
+                        stateMusic = true
                         viewModel.uiStatePosition = index
                         viewModel.uiStateMusic = viewModel.uiStateDataMusic.listMusic[index]
                         MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
@@ -127,11 +137,11 @@ fun ScreenHome(viewModel: AppViewModel) {
                                     Text(
                                         modifier = Modifier
                                             .align(Alignment.TopCenter)
-                                            .padding(top = 12.dp, start = 16.dp, end = 16.dp),
+                                            .padding(top = 12.dp, start = 12.dp, end = 12.dp),
                                         text = viewModel.uiStateMusic.name.replace(".mp3", ""),
                                         maxLines = 1,
                                         color = colorResource(R.color.primary_Accent),
-                                        style = TypographySubTitleGabbi.labelLarge,
+                                        style = TypographySubTitleGabbi.labelMedium,
                                         )
                                     Image(
                                         painterResource(R.drawable.ic_close),
@@ -151,15 +161,20 @@ fun ScreenHome(viewModel: AppViewModel) {
 
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center
+                                    horizontalArrangement = Arrangement.Center,
                                 ) {
+                                    Text(
+                                        modifier = Modifier.align(Alignment.CenterVertically).width(40.dp),
+                                        text = textProgress,
+                                        maxLines = 1,
+                                        color = colorResource(R.color.ui_tay_gray),
+                                        style = TypographySubTitleGabbi.labelSmall)
                                     Image(
                                         painterResource(R.drawable.ic_skip_previous),
                                         modifier = Modifier
-                                            .padding(end = 24.dp)
+                                            .padding(start = 12.dp, end = 24.dp)
                                             .clickable {
-                                                stateMusic = true
-
+                                                completeMusic=false
                                                 var positionCurrent = viewModel.uiStatePosition
                                                 if (positionCurrent > 0) {
                                                     sliderPosition = 0f
@@ -168,7 +183,8 @@ fun ScreenHome(viewModel: AppViewModel) {
                                                     viewModel.uiStateMusic =
                                                         viewModel.uiStateDataMusic.listMusic[viewModel.uiStatePosition]
                                                     MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
-                                                    musicDuration = MediaPlayerSingleton.playDuration()/100
+                                                    musicDuration =
+                                                        MediaPlayerSingleton.playDuration() / 100
                                                 }
                                             },
                                         contentDescription = "closeMusic",
@@ -188,9 +204,9 @@ fun ScreenHome(viewModel: AppViewModel) {
                                     Image(
                                         painterResource(R.drawable.ic_skip_next),
                                         modifier = Modifier
-                                            .padding(start = 24.dp)
+                                            .padding(start = 24.dp, end = 12.dp)
                                             .clickable {
-                                                stateMusic = true
+                                                completeMusic=false
                                                 sliderPosition = 0f
                                                 musicDuration = 0
                                                 var positionCurrent = viewModel.uiStatePosition
@@ -198,13 +214,23 @@ fun ScreenHome(viewModel: AppViewModel) {
                                                     viewModel.uiStatePosition = positionCurrent + 1
                                                     viewModel.uiStateMusic =
                                                         viewModel.uiStateDataMusic.listMusic[viewModel.uiStatePosition]
+
                                                     MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
-                                                    musicDuration = MediaPlayerSingleton.playDuration()/100
+
+                                                    musicDuration =
+                                                        MediaPlayerSingleton.playDuration() / 100
                                                 }
                                             },
                                         contentDescription = "closeMusic",
                                         contentScale = ContentScale.Crop
                                     )
+
+                                    Text(
+                                        modifier = Modifier.align(Alignment.CenterVertically),
+                                        text = formatTimePlayer(MediaPlayerSingleton.playDuration()),
+                                        maxLines = 1,
+                                        color = colorResource(R.color.ui_tay_gray),
+                                        style = TypographySubTitleGabbi.labelSmall)
                                 }
 
 
@@ -215,7 +241,9 @@ fun ScreenHome(viewModel: AppViewModel) {
                                         .padding(horizontal = 8.dp),
                                     value = sliderPosition,
                                     enabled = false,
-                                    onValueChange = { sliderPosition = it },
+                                    onValueChange = {
+                                        sliderPosition = it
+                                                    },
                                     valueRange = 0f..musicDuration.toFloat(),
                                     thumb = {
                                         Box(
@@ -232,7 +260,7 @@ fun ScreenHome(viewModel: AppViewModel) {
                                     track = { sliderState ->
                                         val fraction by remember {
                                             derivedStateOf {
-                                                (sliderState.value - sliderState.valueRange.start) / (sliderState.valueRange.endInclusive - sliderState.valueRange.start)
+                                                (sliderPosition - sliderState.valueRange.start) / (sliderState.valueRange.endInclusive - sliderState.valueRange.start)
                                             }
                                         }
 
@@ -252,7 +280,10 @@ fun ScreenHome(viewModel: AppViewModel) {
                                                     .fillMaxWidth(1f - fraction)
                                                     .align(Alignment.CenterEnd)
                                                     .height(2.dp)
-                                                    .background(colorResource(R.color.primary_pink), CircleShape)
+                                                    .background(
+                                                        colorResource(R.color.primary_pink),
+                                                        CircleShape
+                                                    )
                                             )
                                         }
                                     }
@@ -268,10 +299,6 @@ fun ScreenHome(viewModel: AppViewModel) {
 
 }
 
-@Composable
-private fun ConfigReproduceView(){
-
-}
 
 @Composable
 fun ConfigLisMusic(viewModel: AppViewModel, onClick: (Int) -> Unit) {
@@ -335,7 +362,7 @@ fun MusicItem(model: MusicModel, position: Int, onClick: (Int) -> Unit) {
                 )
             }
             Image(
-                painterResource(R.drawable.ic_skip_next),
+                painterResource(R.drawable.ic_play),
                 modifier = Modifier.weight(1f),
                 contentDescription = "",
                 contentScale = ContentScale.Crop
