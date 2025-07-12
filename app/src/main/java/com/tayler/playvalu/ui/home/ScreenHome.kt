@@ -122,7 +122,7 @@ fun LadMusicDetail(viewModel: AppViewModel){
                 containerColor = Color.White,
                 contentColor = Color.White
             ),
-            border = BorderStroke(width = 2.dp,   color = colorResource(R.color.primary_pink)),
+            border = BorderStroke(width = 2.dp,   color = colorResource(R.color.primary_Accent)),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
@@ -353,7 +353,7 @@ fun MusicItem(model: MusicModel, position: Int, onClick: (Int) -> Unit) {
                     color = colorResource(R.color.primary_Accent),
                     style = TypographyTitleBold.labelLarge
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = model.name.replace(".mp3", ""), maxLines = 2,
                     color = colorResource(R.color.ui_tay_black),
