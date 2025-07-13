@@ -32,13 +32,8 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
-            when (event) {
-                is InitUiEvent.NavigateToNext -> {
-                    navController.navigate(Screen.HomeScreen.route)
-                }
-                else -> {
-
-                }
+            if (event is InitUiEvent.NavigateToNext) {
+                navController.navigate(Screen.HomeScreen.route)
             }
         }
     }
@@ -73,12 +68,6 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
                 style = TypographyTitleBold.titleMedium
             )
         }
-        Text(
-            modifier = Modifier.padding(top = 20.dp),
-            text = stringResource(R.string.app_name),
-            textAlign = TextAlign.Center,
-            style = TypographyTitleBold.titleLarge
-        )
     }
 }
 

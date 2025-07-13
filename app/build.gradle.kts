@@ -75,6 +75,8 @@ dependencies {
 
     implementation("com.google.accompanist:accompanist-permissions:0.29.0-alpha")
 
+    implementation("com.airbnb.android:lottie-compose:4.0.0")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

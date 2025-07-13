@@ -140,7 +140,7 @@ fun LadMusicDetail(viewModel: AppViewModel){
                             .padding(top = 12.dp, start = 12.dp, end = 12.dp),
                         text = viewModel.uiStateMusic.name.replace(".mp3", ""),
                         maxLines = 1,
-                        color = colorResource(R.color.primary_Accent),
+                        color = colorResource(R.color.ui_tay_black),
                         style = TypographySubTitleGabbi.labelMedium,
                     )
                     Image(
@@ -224,7 +224,7 @@ fun LadMusicDetail(viewModel: AppViewModel){
                                 .size(20.dp)
                                 .padding(4.dp)
                                 .background(
-                                    colorResource(R.color.primary_Accent),
+                                    colorResource(R.color.primary_pink),
                                     CircleShape
                                 )
                         )
@@ -362,7 +362,7 @@ fun MusicItem(model: MusicModel, position: Int, onClick: (Int) -> Unit) {
             }
             Image(
                 painterResource(R.drawable.ic_play),
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(0.5f),
                 contentDescription = "",
                 contentScale = ContentScale.Crop
             )
