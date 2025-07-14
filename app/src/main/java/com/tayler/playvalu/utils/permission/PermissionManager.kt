@@ -47,8 +47,8 @@ object PermissionManager {
                 }
             }
         )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // if android 11+ request MANAGER_EXTERNAL_STORAGE
-            if (!Environment.isExternalStorageManager()) { // check if we already have permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
                 val uri = String.format(
                     Locale.ENGLISH,
                     "package:%s",

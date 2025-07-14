@@ -3,6 +3,7 @@ package com.tayler.playvalu.ui
 import android.os.Environment
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,24 +27,19 @@ class AppViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<InitUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
-
     var uiStateDataMusic by mutableStateOf(MusicUiState())
-
     var uiStateMusic by mutableStateOf(MusicModel())
     var uiStatePosition by mutableIntStateOf(0)
-
-
     var musicDuration by mutableIntStateOf(0)
-    var sliderPosition by mutableStateOf(0f)
+    var sliderPosition by mutableFloatStateOf(0f)
     var stateMusic by  mutableStateOf(true)
     var textProgress by  mutableStateOf("00:00")
     var visibleMusic by  mutableStateOf(false)
 
-
     fun loadValidateLogin(){
         execute {
             val response = appUseCase.getToken()
-            delay(3000)
+            delay(5000)
             _eventFlow.emit(InitUiEvent.NavigateToNext(response))
         }
     }
@@ -55,7 +51,7 @@ class AppViewModel @Inject constructor(
             for (item in songs){
                 listFilter.add(MusicModel(name = item.name,path = item.path))
             }
-            uiStateDataMusic = uiStateDataMusic.copy(listMusic = listFilter)
+            uiStateDataMusic = uiStateDataMusic.copy(listMusic = listFilter,uiStateLoading = false)
         }
     }
 }

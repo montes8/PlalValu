@@ -1,13 +1,7 @@
 <resources>
     <string name="app_name">ValuPlay</string>
 
-
     <string name="text_title_splash">Tu musica en</string>
-
     <string name="text_sub_title_splash">ValuPlay</string>
-
-    <string name="tb_title_home">Lista de tus canciones en PlayValu</string>
-
-
-
+    <string name="tb_title_home">Tus canciones en ValuPlay</string>
 </resources>

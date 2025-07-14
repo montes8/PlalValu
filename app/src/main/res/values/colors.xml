@@ -4,6 +4,7 @@
     <color name="primary_Accent">#FF4081</color>
     <color name="primary_secondary">#FF4081</color>
     <color name="primary_pink">#F48FB1</color>
+    <color name="pink_50">#FCE4E4</color>
     <color name="ui_tay_black">#FF000000</color>
     <color name="ui_tay_white">#FFFFFFFF</color>
     <color name="ui_tay_gray">#BDBDBD</color>
