@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.tayler.playvalu.component.MediaPlayerSingleton
 import com.tayler.playvalu.model.MusicModel
 import com.tayler.playvalu.ui.home.MusicUiState
 import com.tayler.playvalu.ui.splash.InitUiEvent
@@ -51,6 +52,7 @@ class AppViewModel @Inject constructor(
             for (item in songs){
                 listFilter.add(MusicModel(name = item.name,path = item.path))
             }
+            MediaPlayerSingleton.listMusic = listFilter
             uiStateDataMusic = uiStateDataMusic.copy(listMusic = listFilter,uiStateLoading = false)
         }
     }

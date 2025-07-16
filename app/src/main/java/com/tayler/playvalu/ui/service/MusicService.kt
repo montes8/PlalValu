@@ -9,6 +9,7 @@ import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -46,7 +47,8 @@ import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.tayler.playvalu.R
 import com.tayler.playvalu.component.MediaPlayerSingleton
-import com.tayler.playvalu.ui.service.ComposeViewCreate
+import com.tayler.playvalu.utils.formatTimePlayer
+import java.lang.invoke.MethodHandles
 import kotlin.math.abs
 
 class MusicService : Service() {
@@ -60,11 +62,44 @@ class MusicService : Service() {
     private lateinit var lifecycleOwner: MyLifecycleOwner
     internal var timeStart: Long = 0
     internal var timeEnd: Long = 0
+    var sleep : Thread? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
         showOverlay()
+        MediaPlayerSingleton.playStartUpdate(MediaPlayerSingleton.listMusic[MediaPlayerSingleton.positionMusic].path
+            ,MediaPlayerSingleton.positionDurationMusic)
+        MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()/100
+        MediaPlayerSingleton.DurationTotalMusic = MediaPlayerSingleton.playDuration()/100
+        detectedNextMusic()
+    }
+
+    private fun detectedNextMusic(){
+         sleep = Thread({
+            while (MediaPlayerSingleton.positionDurationMusic < MediaPlayerSingleton.DurationTotalMusic) {
+                Thread.sleep((1000).toLong())
+                MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()/100
+                try {
+                    if (MediaPlayerSingleton.positionDurationMusic > MediaPlayerSingleton.DurationTotalMusic-10){
+                        try {
+                            var positionUpdate =  MediaPlayerSingleton.positionMusic
+                            if (positionUpdate < MediaPlayerSingleton.listMusic.size -1){
+                                MediaPlayerSingleton.positionMusic = positionUpdate +1
+                                MediaPlayerSingleton.positionDurationMusic = 0
+                                MediaPlayerSingleton.playStart(MediaPlayerSingleton.listMusic[MediaPlayerSingleton.positionMusic].path)
+                                MediaPlayerSingleton.DurationTotalMusic = MediaPlayerSingleton.playDuration()/100
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        })
+        sleep?.start()
     }
 
     private var windowType = 0
@@ -91,8 +126,13 @@ class MusicService : Service() {
         floatingView.setContent {
             ComposeViewCreate(
                 clickClose = {
-                    MediaPlayerSingleton.playStop()
-                    stopService(Intent(this, MusicService::class.java))
+                    try {
+                        MediaPlayerSingleton.playStop()
+                        sleep?.interrupt()
+                        stopService(Intent(this, MusicService::class.java))
+                    }catch (e: Exception){
+                        e.printStackTrace()
+                    }
                 }
             )
         }
@@ -100,12 +140,10 @@ class MusicService : Service() {
         lifecycleOwner = MyLifecycleOwner()
         lifecycleOwner.performRestore(null)
         lifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-
         floatingView.setViewTreeLifecycleOwner(lifecycleOwner)
         floatingView.setViewTreeSavedStateRegistryOwner(lifecycleOwner)
-
         windowManager.addView(floatingView, params)
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             implementTouchListenerToFloatingWidgetView()
         },1000)
 
