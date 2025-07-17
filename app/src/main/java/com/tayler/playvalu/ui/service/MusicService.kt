@@ -1,9 +1,7 @@
 package com.tayler.playvalu.ui.service
 
-import android.R.attr.onClick
 import android.annotation.SuppressLint
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
@@ -14,41 +12,23 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.tayler.playvalu.R
 import com.tayler.playvalu.component.MediaPlayerSingleton
-import com.tayler.playvalu.utils.formatTimePlayer
-import java.lang.invoke.MethodHandles
 import kotlin.math.abs
 
 class MusicService : Service() {
@@ -70,8 +50,8 @@ class MusicService : Service() {
         showOverlay()
         MediaPlayerSingleton.playStartUpdate(MediaPlayerSingleton.listMusic[MediaPlayerSingleton.positionMusic].path
             ,MediaPlayerSingleton.positionDurationMusic)
-        MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()/100
-        MediaPlayerSingleton.DurationTotalMusic = MediaPlayerSingleton.playDuration()/100
+        MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()/10
+        MediaPlayerSingleton.DurationTotalMusic = MediaPlayerSingleton.playDuration()/10
         detectedNextMusic()
     }
 
@@ -79,7 +59,7 @@ class MusicService : Service() {
          sleep = Thread({
             while (MediaPlayerSingleton.positionDurationMusic < MediaPlayerSingleton.DurationTotalMusic) {
                 Thread.sleep((1000).toLong())
-                MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()/100
+                MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()/10
                 try {
                     if (MediaPlayerSingleton.positionDurationMusic > MediaPlayerSingleton.DurationTotalMusic-10){
                         try {
@@ -88,7 +68,7 @@ class MusicService : Service() {
                                 MediaPlayerSingleton.positionMusic = positionUpdate +1
                                 MediaPlayerSingleton.positionDurationMusic = 0
                                 MediaPlayerSingleton.playStart(MediaPlayerSingleton.listMusic[MediaPlayerSingleton.positionMusic].path)
-                                MediaPlayerSingleton.DurationTotalMusic = MediaPlayerSingleton.playDuration()/100
+                                MediaPlayerSingleton.DurationTotalMusic = MediaPlayerSingleton.playDuration()/10
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
