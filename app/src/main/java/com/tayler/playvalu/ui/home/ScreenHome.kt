@@ -66,7 +66,7 @@ fun ScreenHome(viewModel: AppViewModel) {
         while (viewModel.sliderPosition < viewModel.musicDuration) {
             Thread.sleep((1000).toLong())
                 try {
-                    viewModel.sliderPosition = (MediaPlayerSingleton.playCurrentPosition()/100).toFloat()
+                    viewModel.sliderPosition = (MediaPlayerSingleton.playCurrentPosition()).toFloat()
                     viewModel.textProgress = formatTimePlayer(MediaPlayerSingleton.playCurrentPosition())
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -101,7 +101,7 @@ fun ScreenHome(viewModel: AppViewModel) {
                         viewModel.uiStatePosition = index
                         viewModel.uiStateMusic = viewModel.uiStateDataMusic.listMusic[index]
                         MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
-                        viewModel.musicDuration = MediaPlayerSingleton.playDuration()/100
+                        viewModel.musicDuration = MediaPlayerSingleton.playDuration()
                     }
                     if (viewModel.visibleMusic) {
                         LadMusicDetail(viewModel)
@@ -247,11 +247,9 @@ fun LadMusicDetail(viewModel: AppViewModel){
                     },
 
                     track = { sliderState ->
-                        if (sliderState.value > viewModel.musicDuration -10){
+                        if (sliderState.value > viewModel.musicDuration -1000){
                             nextMusic(viewModel)
                         }
-
-                        Log.d("sliderPosition","${sliderState.value}} ----  ${viewModel.musicDuration}}")
                         val fraction by remember {
                             derivedStateOf {
                                 (viewModel.sliderPosition - sliderState.valueRange.start) / (sliderState.valueRange.endInclusive - sliderState.valueRange.start)
@@ -299,7 +297,7 @@ fun nextMusic(viewModel: AppViewModel){
             viewModel.uiStateDataMusic.listMusic[viewModel.uiStatePosition]
         MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
         viewModel.musicDuration =
-            MediaPlayerSingleton.playDuration() / 100
+            MediaPlayerSingleton.playDuration()
     }
 }
 
@@ -313,7 +311,7 @@ fun previousMusic(viewModel: AppViewModel) {
             viewModel.uiStateDataMusic.listMusic[viewModel.uiStatePosition]
         MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
         viewModel.musicDuration =
-            MediaPlayerSingleton.playDuration() / 100
+            MediaPlayerSingleton.playDuration()
     }
 }
 

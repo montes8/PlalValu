@@ -6,6 +6,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.core.view.WindowCompat
 import com.tayler.playvalu.component.Navigation
 import com.tayler.playvalu.ui.service.MusicService
 import com.tayler.playvalu.utils.PlayValuTheme
@@ -14,11 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-
-    companion object {
-        fun newInstance(context: Context) = context.startActivity(Intent(context, MainActivity::class.java))
-    }
 
     @SuppressLint("ImplicitSamInstance")
     override fun onCreate(savedInstanceState: Bundle?) {
