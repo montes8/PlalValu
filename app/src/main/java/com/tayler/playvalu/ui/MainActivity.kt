@@ -1,14 +1,10 @@
 package com.tayler.playvalu.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.core.view.WindowCompat
 import com.tayler.playvalu.component.Navigation
 import com.tayler.playvalu.ui.service.MusicService
 import com.tayler.playvalu.utils.PlayValuTheme

@@ -70,6 +70,10 @@ dependencies {
 
     implementation ("androidx.lifecycle:lifecycle-process:2.4.1")
     implementation("com.google.dagger:hilt-android:2.48")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
     kapt("com.google.dagger:hilt-android-compiler:2.48")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
