@@ -50,8 +50,6 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun ScreenSplash(viewModel: AppViewModel, navController: NavController = rememberNavController()) {
 
-    val context = LocalContext.current
-
     var animLotti by remember { mutableStateOf(false) }
     var animText by remember { mutableStateOf(false) }
 
@@ -77,17 +75,12 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
         animText = true
         animLotti = true },100)
 
+    viewModel.loadValidateLogin()
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             if (event is InitUiEvent.NavigateToNext) {
                 navController.navigate(Screen.HomeScreen.route)
             }
-        }
-    }
-
-    PermissionManager.CheckFilePermission(context) { isGranted ->
-        if (isGranted) {
-            viewModel.loadValidateLogin()
         }
     }
 

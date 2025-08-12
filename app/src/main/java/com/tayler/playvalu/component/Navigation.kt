@@ -1,16 +1,18 @@
 package com.tayler.playvalu.component
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.tayler.playvalu.ui.AppViewModel
 import com.tayler.playvalu.ui.home.ScreenHome
 import com.tayler.playvalu.ui.splash.ScreenSplash
 
 @Composable
-fun Navigation() {
+fun Navigation(viewModel: AppViewModel,paddingValues: PaddingValues) {
     val navController = rememberNavController()
 
     NavHost(
@@ -22,14 +24,14 @@ fun Navigation() {
             BackHandler(true) {
                 // Or do nothing
             }
-            ScreenSplash(hiltViewModel(), navController = navController)
+            ScreenSplash(viewModel, navController = navController)
         }
 
         composable(route = Screen.HomeScreen.route) {
             BackHandler(true) {
                 // Or do nothing
             }
-            ScreenHome(hiltViewModel())
+            ScreenHome(viewModel,paddingValues)
         }
     }
 

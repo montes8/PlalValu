@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -37,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -58,10 +60,10 @@ import com.tayler.playvalu.utils.permission.PermissionManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenHome(viewModel: AppViewModel) {
+fun ScreenHome(viewModel: AppViewModel,paddingValues: PaddingValues) {
     val context = LocalContext.current
     val activity = context.getActivityOrNull()
-
+    viewModel.loadMusic()
     val sleep = Thread({
         while (viewModel.sliderPosition < viewModel.musicDuration) {
             Thread.sleep((1000).toLong())
@@ -73,26 +75,14 @@ fun ScreenHome(viewModel: AppViewModel) {
                 }
         }
     })
-    viewModel.loadMusic()
+
     if(viewModel.visibleMusic){
         sleep.start()
     }else{
         sleep.interrupt()
     }
+    Column(Modifier.padding(paddingValues)) {
 
-
-    Column {
-        UiTayCToolBar(uiTayText = stringResource(R.string.tb_title_home), uiTayModifier = UiTayToolBarModel(
-            uTTypeEnd = true
-        )) {
-            MediaPlayerSingleton.positionMusic =  viewModel.uiStatePosition
-            MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()
-            PermissionManager.checkOverlayPermission(context) {
-                    activity?.startService(Intent(context, MusicService::class.java))
-                    MediaPlayerSingleton.playStop()
-                    activity?.finish()
-            }
-    }
         if (viewModel.uiStateDataMusic.listMusic.isNotEmpty()) {
                 Box {
                     ConfigLisMusic(viewModel) { index ->

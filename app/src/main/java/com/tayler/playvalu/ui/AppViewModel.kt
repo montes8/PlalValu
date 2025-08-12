@@ -40,7 +40,7 @@ class AppViewModel @Inject constructor(
     fun loadValidateLogin(){
         execute {
             val response = appUseCase.getToken()
-            delay(5000)
+            delay(4000)
             _eventFlow.emit(InitUiEvent.NavigateToNext(response))
         }
     }
