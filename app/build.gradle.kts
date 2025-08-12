@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.tayler.playvalu"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 35
         versionCode = 3
         versionName = "1.0.2"
@@ -64,7 +64,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.0.0-beta03")
     implementation("androidx.compose.material:material:1.8.3") // Use the latest version
     implementation("androidx.navigation:navigation-compose:2.9.0")
-
+    implementation("com.github.montes8:uivalulibrary:1.0.0")
     // hilt
     kapt("com.google.dagger:hilt-android-compiler:2.48")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
