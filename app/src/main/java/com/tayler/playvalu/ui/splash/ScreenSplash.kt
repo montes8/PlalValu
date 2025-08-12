@@ -35,6 +35,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.tayler.playvalu.R
@@ -52,6 +54,7 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
 
     var animLotti by remember { mutableStateOf(false) }
     var animText by remember { mutableStateOf(false) }
+
     val offset by animateDpAsState(
         targetValue = if (animLotti) 0.dp else (-500).dp,
         animationSpec = tween(

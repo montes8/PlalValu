@@ -13,10 +13,10 @@ android {
 
     defaultConfig {
         applicationId = "com.tayler.playvalu"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -66,16 +66,15 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.9.0")
 
     // hilt
-    implementation ("com.google.dagger:hilt-android:2.38.1")
-
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation ("androidx.lifecycle:lifecycle-process:2.4.1")
     implementation("com.google.dagger:hilt-android:2.48")
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+
 
     implementation("com.google.accompanist:accompanist-permissions:0.29.0-alpha")
 
