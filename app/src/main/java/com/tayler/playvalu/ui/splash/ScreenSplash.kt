@@ -34,7 +34,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.gb.vale.uivalulibrary.utils.uiTayHandler
 import com.tayler.playvalu.R
 import com.tayler.playvalu.component.AnimatedLotti
 import com.tayler.playvalu.component.Screen
@@ -47,7 +46,6 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
 
     var animLotti by remember { mutableStateOf(false) }
     var animText by remember { mutableStateOf(false) }
-    Log.d("ScreenHome","ScreenSplash")
     val offset by animateDpAsState(
         targetValue = if (animLotti) 0.dp else (-500).dp,
         animationSpec = tween(
@@ -75,7 +73,6 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             if (event is InitUiEvent.NavigateToNext) {
-                Log.d("ScreenHome","LaunchedEffect")
                 navController.navigate(Screen.HomeScreen.route){
                     launchSingleTop = true
                 }

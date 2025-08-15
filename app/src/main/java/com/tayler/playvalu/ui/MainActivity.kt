@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -17,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.gb.vale.uivalulibrary.manager.permission.UiTayPermissionManager
+import com.gb.vale.uivalulibrary.utils.uiTayHandler
 import com.gb.vale.uivalulibrary.utils.uiTayShowToast
 import com.tayler.playvalu.R
 import com.tayler.playvalu.component.MediaPlayerSingleton
@@ -70,6 +72,7 @@ class MainActivity : ComponentActivity() {
                 != PackageManager.PERMISSION_GRANTED
             ) {
                 onResume = true
+
                 permissionVale.requestPermissions(
                     arrayOf(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -79,18 +82,42 @@ class MainActivity : ComponentActivity() {
                     permissionSuccess()
                 }
 
+
             } else {
                 permissionSuccess()
             }
         }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("ciclovidaplay","onRestart")
+    }
+
 
     override fun onResume() {
         super.onResume()
         if(onResume){
-           // configInit()
-            onResume = false
+            configResume()
+        }
+    }
+
+    private fun configResume(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Environment.isExternalStorageManager()) {
+                permissionSuccess()
+            } else {
+                uiTayShowToast("El permiso en necesario para continuar")
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionSuccess()
+
+            }else{
+                uiTayShowToast("El permiso en necesario para continuar")
+            }
         }
     }
 
@@ -113,9 +140,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }, content = { paddingValues ->
-                    Surface {
                         Navigation(viewModel,paddingValues)
-                    }
                 })
 
             }

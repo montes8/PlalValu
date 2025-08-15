@@ -1,7 +1,5 @@
 package com.tayler.playvalu.ui.home
 
-import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,43 +36,34 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.tayler.playvalu.R
-import com.tayler.playvalu.component.AnimatedLotti
 import com.tayler.playvalu.component.MediaPlayerSingleton
 import com.tayler.playvalu.component.MediaPlayerSingleton.playStateMusic
-import com.tayler.playvalu.component.UiTayCToolBar
 import com.tayler.playvalu.model.MusicModel
-import com.tayler.playvalu.model.UiTayToolBarModel
 import com.tayler.playvalu.ui.AppViewModel
-import com.tayler.playvalu.ui.service.MusicService
 import com.tayler.playvalu.utils.TypographySubTitleGabbi
 import com.tayler.playvalu.utils.TypographyTitleBold
 import com.tayler.playvalu.utils.formatTimePlayer
-import com.tayler.playvalu.utils.getActivityOrNull
-import com.tayler.playvalu.utils.permission.PermissionManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenHome(viewModel: AppViewModel,paddingValues: PaddingValues) {
-    Log.d("ScreenHome","ScreenHomeErr")
     viewModel.loadMusic()
-    val sleep = Thread({
+    val sleep = Thread {
         while (viewModel.sliderPosition < viewModel.musicDuration) {
             Thread.sleep((1000).toLong())
-                try {
-                    viewModel.sliderPosition = (MediaPlayerSingleton.playCurrentPosition()).toFloat()
-                    viewModel.textProgress = formatTimePlayer(MediaPlayerSingleton.playCurrentPosition())
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+            try {
+                viewModel.sliderPosition = (MediaPlayerSingleton.playCurrentPosition()).toFloat()
+                viewModel.textProgress =
+                    formatTimePlayer(MediaPlayerSingleton.playCurrentPosition())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
-    })
+    }
 
     if(viewModel.visibleMusic){
         sleep.start()
@@ -291,7 +280,7 @@ fun LadMusicDetail(viewModel: AppViewModel){
 }
 
 fun nextMusic(viewModel: AppViewModel){
-    var positionCurrent = viewModel.uiStatePosition
+    val positionCurrent = viewModel.uiStatePosition
     if (positionCurrent < viewModel.uiStateDataMusic.listMusic.size - 1) {
         viewModel.sliderPosition = 0f
         viewModel.musicDuration = 0
@@ -305,7 +294,7 @@ fun nextMusic(viewModel: AppViewModel){
 }
 
 fun previousMusic(viewModel: AppViewModel) {
-    var positionCurrent = viewModel.uiStatePosition
+    val positionCurrent = viewModel.uiStatePosition
     if (positionCurrent > 0) {
         viewModel.sliderPosition = 0f
         viewModel.musicDuration = 0
@@ -364,7 +353,7 @@ fun MusicItem(model: MusicModel, position: Int, onClick: (Int) -> Unit) {
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.padding(12.dp))
-            Column( modifier = Modifier.weight(6f),) {
+            Column( modifier = Modifier.weight(6f)) {
                 Text(
                     text = "Nombre de cancion", maxLines = 1,
                     color = colorResource(R.color.primary_Accent),
