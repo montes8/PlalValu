@@ -45,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.tayler.playvalu.R
+import com.tayler.playvalu.component.AnimatedLotti
 import com.tayler.playvalu.component.MediaPlayerSingleton
 import com.tayler.playvalu.component.MediaPlayerSingleton.playStateMusic
 import com.tayler.playvalu.component.UiTayCToolBar
@@ -61,8 +62,7 @@ import com.tayler.playvalu.utils.permission.PermissionManager
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenHome(viewModel: AppViewModel,paddingValues: PaddingValues) {
-    val context = LocalContext.current
-    val activity = context.getActivityOrNull()
+    Log.d("ScreenHome","ScreenHomeErr")
     viewModel.loadMusic()
     val sleep = Thread({
         while (viewModel.sliderPosition < viewModel.musicDuration) {
@@ -81,10 +81,20 @@ fun ScreenHome(viewModel: AppViewModel,paddingValues: PaddingValues) {
     }else{
         sleep.interrupt()
     }
+    viewModel.visibleToolbar = true
+    if (viewModel.uiStateDataMusic.uiStateLoading){
+        Column(modifier = Modifier.fillMaxSize().background(Color.White),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+             CircularProgressIndicator(
+                 modifier = Modifier
+                     .background(Color.White)
+                     .wrapContentSize(), color = colorResource(R.color.primary_pink)
+             )
+        }
+    }
     Column(Modifier.padding(paddingValues)) {
-
         if (viewModel.uiStateDataMusic.listMusic.isNotEmpty()) {
-                Box {
                     ConfigLisMusic(viewModel) { index ->
                         viewModel.visibleMusic = true
                         viewModel.stateMusic = true
@@ -96,22 +106,25 @@ fun ScreenHome(viewModel: AppViewModel,paddingValues: PaddingValues) {
                     if (viewModel.visibleMusic) {
                         LadMusicDetail(viewModel)
                     }
+            }else{
+                if(!viewModel.uiStateDataMusic.uiStateLoading){
+                    Column(modifier = Modifier.fillMaxSize().background(Color.White),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            modifier = Modifier,
+                            text = "No se encontro musica para reproducir",
+                            maxLines = 1,
+                            color = colorResource(R.color.ui_tay_black),
+                            style = TypographySubTitleGabbi.labelMedium,
+                        )
+                    }
                 }
+
             }
         }
 
-    if (viewModel.uiStateDataMusic.uiStateLoading){
-        Column(modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .background(Color.Transparent)
-                    .wrapContentSize(), color = colorResource(R.color.primary_pink)
-            )
 
-        }
-    }
 
 }
 

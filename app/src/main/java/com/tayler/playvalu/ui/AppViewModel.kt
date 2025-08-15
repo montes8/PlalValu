@@ -37,6 +37,8 @@ class AppViewModel @Inject constructor(
     var textProgress by  mutableStateOf("00:00")
     var visibleMusic by  mutableStateOf(false)
 
+    var visibleToolbar by  mutableStateOf(false)
+
     fun loadValidateLogin(){
         execute {
             val response = appUseCase.getToken()

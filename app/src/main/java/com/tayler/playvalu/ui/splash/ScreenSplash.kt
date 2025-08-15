@@ -2,12 +2,11 @@ package com.tayler.playvalu.ui.splash
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,22 +27,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.gb.vale.uivalulibrary.utils.uiTayHandler
 import com.tayler.playvalu.R
 import com.tayler.playvalu.component.AnimatedLotti
 import com.tayler.playvalu.component.Screen
 import com.tayler.playvalu.ui.AppViewModel
 import com.tayler.playvalu.utils.TypographyTitleBold
-import com.tayler.playvalu.utils.permission.PermissionManager
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -52,7 +47,7 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
 
     var animLotti by remember { mutableStateOf(false) }
     var animText by remember { mutableStateOf(false) }
-
+    Log.d("ScreenHome","ScreenSplash")
     val offset by animateDpAsState(
         targetValue = if (animLotti) 0.dp else (-500).dp,
         animationSpec = tween(
@@ -75,11 +70,15 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
         animText = true
         animLotti = true },100)
 
+
     viewModel.loadValidateLogin()
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             if (event is InitUiEvent.NavigateToNext) {
-                navController.navigate(Screen.HomeScreen.route)
+                Log.d("ScreenHome","LaunchedEffect")
+                navController.navigate(Screen.HomeScreen.route){
+                    launchSingleTop = true
+                }
             }
         }
     }

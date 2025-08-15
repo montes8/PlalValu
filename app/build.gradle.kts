@@ -15,8 +15,8 @@ android {
         applicationId = "com.tayler.playvalu"
         minSdk = 24
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -60,9 +60,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
     implementation("androidx.compose.material3:material3:1.0.0-beta03")
-    implementation("androidx.compose.material:material:1.8.3") // Use the latest version
     implementation("androidx.navigation:navigation-compose:2.9.0")
     implementation("com.github.montes8:uivalulibrary:1.0.0")
     // hilt

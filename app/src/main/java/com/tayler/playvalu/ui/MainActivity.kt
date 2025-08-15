@@ -12,6 +12,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -88,7 +89,7 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         if(onResume){
-            configInit()
+           // configInit()
             onResume = false
         }
     }
@@ -98,19 +99,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             PlayValuTheme {
                 Scaffold(topBar = {
-                    UiTayCToolBar(uiTayText = stringResource(R.string.tb_title_home), uiTayModifier = UiTayToolBarModel(
-                        uTTypeEnd = true
-                    )) {
-                        MediaPlayerSingleton.positionMusic =  viewModel.uiStatePosition
-                        MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()
-                        PermissionManager.checkOverlayPermission(this) {
-                            startService(Intent(this, MusicService::class.java))
-                            MediaPlayerSingleton.playStop()
-                            finish()
+                    if(viewModel.visibleToolbar){
+                        UiTayCToolBar(uiTayText = stringResource(R.string.tb_title_home), uiTayModifier = UiTayToolBarModel(
+                            uTTypeEnd = true
+                        )) {
+                            MediaPlayerSingleton.positionMusic =  viewModel.uiStatePosition
+                            MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()
+                            PermissionManager.checkOverlayPermission(this) {
+                                startService(Intent(this, MusicService::class.java))
+                                MediaPlayerSingleton.playStop()
+                                finish()
+                            }
                         }
                     }
                 }, content = { paddingValues ->
-                    Navigation(viewModel,paddingValues)
+                    Surface {
+                        Navigation(viewModel,paddingValues)
+                    }
                 })
 
             }
