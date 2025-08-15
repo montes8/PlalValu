@@ -1,12 +1,10 @@
 package com.tayler.playvalu.ui
 
 import android.os.Environment
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.tayler.playvalu.component.MediaPlayerSingleton
 import com.tayler.playvalu.model.MusicModel
@@ -38,6 +36,7 @@ class AppViewModel @Inject constructor(
     var visibleMusic by  mutableStateOf(false)
 
     var visibleToolbar by  mutableStateOf(false)
+    var visibleMusicEmpty by  mutableStateOf(false)
 
     fun loadValidateLogin(){
         execute {

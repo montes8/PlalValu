@@ -1,5 +1,6 @@
 package com.tayler.playvalu.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -50,7 +51,7 @@ import com.tayler.playvalu.utils.formatTimePlayer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenHome(viewModel: AppViewModel,paddingValues: PaddingValues) {
+fun ScreenHome(viewModel: AppViewModel, paddingValues: PaddingValues) {
     viewModel.loadMusic()
     val sleep = Thread {
         while (viewModel.sliderPosition < viewModel.musicDuration) {
@@ -65,72 +66,80 @@ fun ScreenHome(viewModel: AppViewModel,paddingValues: PaddingValues) {
         }
     }
 
-    if(viewModel.visibleMusic){
+    if (viewModel.visibleMusic) {
         sleep.start()
-    }else{
+    } else {
         sleep.interrupt()
     }
     viewModel.visibleToolbar = true
-    if (viewModel.uiStateDataMusic.uiStateLoading){
-        Column(modifier = Modifier.fillMaxSize().background(Color.White),
+    if (viewModel.uiStateDataMusic.uiStateLoading) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-             CircularProgressIndicator(
-                 modifier = Modifier
-                     .background(Color.White)
-                     .wrapContentSize(), color = colorResource(R.color.primary_pink)
-             )
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .background(Color.White)
+                    .wrapContentSize(),
+                color = colorResource(R.color.primary_pink)
+            )
         }
     }
-    Column(Modifier.padding(paddingValues)) {
+    Column(Modifier.padding(paddingValues).background(Color.White)) {
         if (viewModel.uiStateDataMusic.listMusic.isNotEmpty()) {
-                    ConfigLisMusic(viewModel) { index ->
-                        viewModel.visibleMusic = true
-                        viewModel.stateMusic = true
-                        viewModel.uiStatePosition = index
-                        viewModel.uiStateMusic = viewModel.uiStateDataMusic.listMusic[index]
-                        MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
-                        viewModel.musicDuration = MediaPlayerSingleton.playDuration()
-                    }
-                    if (viewModel.visibleMusic) {
-                        LadMusicDetail(viewModel)
-                    }
-            }else{
-                if(!viewModel.uiStateDataMusic.uiStateLoading){
-                    Column(modifier = Modifier.fillMaxSize().background(Color.White),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            modifier = Modifier,
-                            text = "No se encontro musica para reproducir",
-                            maxLines = 1,
-                            color = colorResource(R.color.ui_tay_black),
-                            style = TypographySubTitleGabbi.labelMedium,
-                        )
-                    }
+            Box(modifier = Modifier.background(Color.White)) {
+                ConfigLisMusic(viewModel) { index ->
+                    viewModel.visibleMusic = true
+                    viewModel.stateMusic = true
+                    viewModel.uiStatePosition = index
+                    viewModel.uiStateMusic = viewModel.uiStateDataMusic.listMusic[index]
+                    MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
+                    viewModel.musicDuration = MediaPlayerSingleton.playDuration()
                 }
-
+                if (viewModel.visibleMusic) {
+                    LadMusicDetail(viewModel)
+                }
+            }
+        }
+        if (viewModel.visibleMusicEmpty) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier,
+                    text = "No se encontro musica para reproducir",
+                    maxLines = 1,
+                    color = colorResource(R.color.ui_tay_black),
+                    style = TypographySubTitleGabbi.labelMedium,
+                )
             }
         }
 
+    }
 
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LadMusicDetail(viewModel: AppViewModel){
-    Box(modifier = Modifier.fillMaxHeight()) {
+fun LadMusicDetail(viewModel: AppViewModel) {
+    Box(modifier = Modifier.fillMaxHeight().background(Color.Transparent)) {
         Card(
             shape = RoundedCornerShape(20.dp),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 10.dp
             ),
             colors = CardDefaults.cardColors(
-                containerColor = Color.White,
-                contentColor = Color.White
+                containerColor = Color.White, contentColor = Color.White
             ),
-            border = BorderStroke(width = 2.dp,   color = colorResource(R.color.primary_pink)),
+            border = BorderStroke(width = 2.dp, color = colorResource(R.color.primary_pink)),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
@@ -172,15 +181,18 @@ fun LadMusicDetail(viewModel: AppViewModel){
                     horizontalArrangement = Arrangement.Center,
                 ) {
                     Text(
-                        modifier = Modifier.align(Alignment.CenterVertically).width(40.dp),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .width(40.dp),
                         text = viewModel.textProgress,
                         maxLines = 1,
                         color = colorResource(R.color.ui_tay_black),
-                        style = TypographySubTitleGabbi.labelSmall)
+                        style = TypographySubTitleGabbi.labelSmall
+                    )
                     Image(
                         painterResource(R.drawable.ic_skip_previous),
                         modifier = Modifier
-                            .padding(start = 12.dp, end = 24.dp)
+                            .padding(start = 12.dp, end = 12.dp)
                             .clickable {
                                 previousMusic(viewModel)
                             },
@@ -201,7 +213,7 @@ fun LadMusicDetail(viewModel: AppViewModel){
                     Image(
                         painterResource(R.drawable.ic_skip_next),
                         modifier = Modifier
-                            .padding(start = 24.dp, end = 12.dp)
+                            .padding(start = 12.dp, end = 12.dp)
                             .clickable {
                                 nextMusic(viewModel)
                             },
@@ -213,7 +225,8 @@ fun LadMusicDetail(viewModel: AppViewModel){
                         text = formatTimePlayer(MediaPlayerSingleton.playDuration()),
                         maxLines = 1,
                         color = colorResource(R.color.ui_tay_black),
-                        style = TypographySubTitleGabbi.labelSmall)
+                        style = TypographySubTitleGabbi.labelSmall
+                    )
                 }
                 Slider(
                     modifier = Modifier
@@ -232,14 +245,13 @@ fun LadMusicDetail(viewModel: AppViewModel){
                                 .size(20.dp)
                                 .padding(4.dp)
                                 .background(
-                                    colorResource(R.color.primary_pink),
-                                    CircleShape
+                                    colorResource(R.color.primary_pink), CircleShape
                                 )
                         )
                     },
 
                     track = { sliderState ->
-                        if (sliderState.value > viewModel.musicDuration -1000){
+                        if (sliderState.value > viewModel.musicDuration - 1000) {
                             nextMusic(viewModel)
                         }
                         val fraction by remember {
@@ -255,8 +267,7 @@ fun LadMusicDetail(viewModel: AppViewModel){
                                     .align(Alignment.CenterStart)
                                     .height(2.dp)
                                     .background(
-                                        colorResource(R.color.primary_Accent),
-                                        CircleShape
+                                        colorResource(R.color.primary_Accent), CircleShape
                                     )
                             )
                             Box(
@@ -265,8 +276,7 @@ fun LadMusicDetail(viewModel: AppViewModel){
                                     .align(Alignment.CenterEnd)
                                     .height(2.dp)
                                     .background(
-                                        colorResource(R.color.ui_tay_gray),
-                                        CircleShape
+                                        colorResource(R.color.ui_tay_gray), CircleShape
                                     )
                             )
                         }
@@ -279,17 +289,15 @@ fun LadMusicDetail(viewModel: AppViewModel){
 
 }
 
-fun nextMusic(viewModel: AppViewModel){
+fun nextMusic(viewModel: AppViewModel) {
     val positionCurrent = viewModel.uiStatePosition
     if (positionCurrent < viewModel.uiStateDataMusic.listMusic.size - 1) {
         viewModel.sliderPosition = 0f
         viewModel.musicDuration = 0
         viewModel.uiStatePosition = positionCurrent + 1
-        viewModel.uiStateMusic =
-            viewModel.uiStateDataMusic.listMusic[viewModel.uiStatePosition]
+        viewModel.uiStateMusic = viewModel.uiStateDataMusic.listMusic[viewModel.uiStatePosition]
         MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
-        viewModel.musicDuration =
-            MediaPlayerSingleton.playDuration()
+        viewModel.musicDuration = MediaPlayerSingleton.playDuration()
     }
 }
 
@@ -299,11 +307,9 @@ fun previousMusic(viewModel: AppViewModel) {
         viewModel.sliderPosition = 0f
         viewModel.musicDuration = 0
         viewModel.uiStatePosition = positionCurrent - 1
-        viewModel.uiStateMusic =
-            viewModel.uiStateDataMusic.listMusic[viewModel.uiStatePosition]
+        viewModel.uiStateMusic = viewModel.uiStateDataMusic.listMusic[viewModel.uiStatePosition]
         MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
-        viewModel.musicDuration =
-            MediaPlayerSingleton.playDuration()
+        viewModel.musicDuration = MediaPlayerSingleton.playDuration()
     }
 }
 
@@ -311,8 +317,7 @@ fun previousMusic(viewModel: AppViewModel) {
 fun ConfigLisMusic(viewModel: AppViewModel, onClick: (Int) -> Unit) {
     Column(
         modifier = Modifier.padding(
-            top = 12.dp, end = 8.dp,
-            start = 8.dp
+            top = 12.dp, end = 8.dp, start = 8.dp
         )
     ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -330,10 +335,8 @@ fun MusicItem(model: MusicModel, position: Int, onClick: (Int) -> Unit) {
     Card(
         shape = RoundedCornerShape(20.dp), elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-            contentColor = Color.White
+        ), colors = CardDefaults.cardColors(
+            containerColor = Color.White, contentColor = Color.White
         ), modifier = Modifier
             .padding(8.dp)
             .fillMaxSize()
@@ -344,8 +347,7 @@ fun MusicItem(model: MusicModel, position: Int, onClick: (Int) -> Unit) {
                 .clickable {
                     onClick(position)
                 }
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically) {
+                .padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painterResource(R.drawable.ic_music),
                 modifier = Modifier.weight(0.6f),
@@ -353,15 +355,17 @@ fun MusicItem(model: MusicModel, position: Int, onClick: (Int) -> Unit) {
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.padding(12.dp))
-            Column( modifier = Modifier.weight(6f)) {
+            Column(modifier = Modifier.weight(6f)) {
                 Text(
-                    text = "Nombre de cancion", maxLines = 1,
+                    text = "Nombre de cancion",
+                    maxLines = 1,
                     color = colorResource(R.color.primary_Accent),
                     style = TypographyTitleBold.labelLarge
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = model.name.replace(".mp3", ""), maxLines = 2,
+                    text = model.name.replace(".mp3", ""),
+                    maxLines = 2,
                     color = colorResource(R.color.ui_tay_black),
                     style = TypographySubTitleGabbi.titleMedium
                 )

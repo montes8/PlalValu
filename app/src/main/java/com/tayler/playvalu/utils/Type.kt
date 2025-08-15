@@ -114,8 +114,8 @@ val TypographySubTitleGabbi = Typography(
     labelSmall = TextStyle(
         fontFamily = gabbiFont,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 20.sp,
+        fontSize = 14.sp,
+        lineHeight = 18.sp,
         color = Color.White
     )
 )
