@@ -1,7 +1,6 @@
 package com.tayler.playvalu.ui
 
 import android.content.Context
-import android.os.Environment
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -11,7 +10,6 @@ import com.tayler.playvalu.component.MediaPlayerSingleton
 import com.tayler.playvalu.model.MusicModel
 import com.tayler.playvalu.ui.home.MusicUiState
 import com.tayler.playvalu.ui.splash.InitUiEvent
-import com.tayler.playvalu.usecases.AppUseCase
 import com.tayler.playvalu.utils.getFileMusic
 import com.tayler.playvalu.utils.getFileMusicDeprecated
 import com.tayler.playvalu.utils.validateApiAndroidR
@@ -19,7 +17,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,9 +50,10 @@ class AppViewModel @Inject constructor(
             val listFilter = if(validateApiAndroidR())context.getFileMusic() else{
                 getFileMusicDeprecated()
             }
-
             MediaPlayerSingleton.listMusic = listFilter
+
             uiStateDataMusic = uiStateDataMusic.copy(listMusic = listFilter,uiStateLoading = false)
+            visibleMusicEmpty = listFilter.isEmpty()
         }
     }
 }
