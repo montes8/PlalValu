@@ -2,7 +2,6 @@ package com.tayler.playvalu.ui.splash
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween

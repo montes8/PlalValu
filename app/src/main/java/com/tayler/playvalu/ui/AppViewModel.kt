@@ -1,5 +1,6 @@
 package com.tayler.playvalu.ui
 
+import android.content.Context
 import android.os.Environment
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -11,6 +12,9 @@ import com.tayler.playvalu.model.MusicModel
 import com.tayler.playvalu.ui.home.MusicUiState
 import com.tayler.playvalu.ui.splash.InitUiEvent
 import com.tayler.playvalu.usecases.AppUseCase
+import com.tayler.playvalu.utils.getFileMusic
+import com.tayler.playvalu.utils.getFileMusicDeprecated
+import com.tayler.playvalu.utils.validateApiAndroidR
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,7 +24,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
-    private val appUseCase: AppUseCase
 ):BaseViewModel() {
 
 
@@ -40,41 +43,21 @@ class AppViewModel @Inject constructor(
 
     fun loadValidateLogin(){
         execute {
-            val response = appUseCase.getToken()
             delay(4000)
-            _eventFlow.emit(InitUiEvent.NavigateToNext(response))
+            _eventFlow.emit(InitUiEvent.NavigateToNext())
         }
     }
 
-    fun loadMusic(){
-        val listFilter : ArrayList<MusicModel> = ArrayList()
+    fun loadMusic(context: Context){
         execute {
-            val songs = getMusic(Environment.getExternalStorageDirectory())
-            for (item in songs){
-                listFilter.add(MusicModel(name = item.name,path = item.path))
+            val listFilter = if(validateApiAndroidR())context.getFileMusic() else{
+                getFileMusicDeprecated()
             }
+
             MediaPlayerSingleton.listMusic = listFilter
             uiStateDataMusic = uiStateDataMusic.copy(listMusic = listFilter,uiStateLoading = false)
         }
     }
 }
 
-
-
-fun getMusic(root: File): ArrayList<File> {
-    val filesMusic: ArrayList<File> = ArrayList()
-    val files = root.listFiles()
-    files?.let {
-        for (item in it) {
-            if (item.isDirectory && !item.isHidden) {
-                filesMusic.addAll(getMusic(item))
-            } else {
-                if (item.name.endsWith(".mp3")) {
-                    filesMusic.add(item)
-                }
-            }
-        }
-    }
-    return filesMusic
-}
 

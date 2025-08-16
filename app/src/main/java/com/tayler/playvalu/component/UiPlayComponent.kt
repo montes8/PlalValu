@@ -69,22 +69,22 @@ fun UiTayCToolBar(uiTayText : String = "",
 
 @Composable
 fun AnimatedLotti(modifier: Modifier = Modifier) {
-    val preloaderLottieComposition by rememberLottieComposition(
+    val preLoaderLottieComposition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(
             R.raw.music
         )
     )
 
-    val preloaderProgress by animateLottieCompositionAsState(
-        preloaderLottieComposition,
+    val preLoaderProgress by animateLottieCompositionAsState(
+        preLoaderLottieComposition,
         iterations = LottieConstants.IterateForever,
         isPlaying = true
     )
 
 
     LottieAnimation(
-        composition = preloaderLottieComposition,
-        progress = preloaderProgress,
+        composition = preLoaderLottieComposition,
+        progress = preLoaderProgress,
         modifier = modifier
     )
 }

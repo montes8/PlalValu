@@ -29,7 +29,6 @@ import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.tayler.playvalu.R
 import com.tayler.playvalu.component.MediaPlayerSingleton
-import kotlin.math.abs
 
 class MusicService : Service() {
 
@@ -56,29 +55,31 @@ class MusicService : Service() {
     }
 
     private fun detectedNextMusic(){
-         sleep = Thread({
-            while (MediaPlayerSingleton.positionDurationMusic < MediaPlayerSingleton.DurationTotalMusic) {
-                Thread.sleep((1000).toLong())
-                MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()/10
-                try {
-                    if (MediaPlayerSingleton.positionDurationMusic > MediaPlayerSingleton.DurationTotalMusic-10){
-                        try {
-                            var positionUpdate =  MediaPlayerSingleton.positionMusic
-                            if (positionUpdate < MediaPlayerSingleton.listMusic.size -1){
-                                MediaPlayerSingleton.positionMusic = positionUpdate +1
-                                MediaPlayerSingleton.positionDurationMusic = 0
-                                MediaPlayerSingleton.playStart(MediaPlayerSingleton.listMusic[MediaPlayerSingleton.positionMusic].path)
-                                MediaPlayerSingleton.DurationTotalMusic = MediaPlayerSingleton.playDuration()/10
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        })
+         sleep = Thread {
+             while (MediaPlayerSingleton.positionDurationMusic < MediaPlayerSingleton.DurationTotalMusic) {
+                 Thread.sleep((1000).toLong())
+                 MediaPlayerSingleton.positionDurationMusic =
+                     MediaPlayerSingleton.playCurrentPosition() / 10
+                 try {
+                     if (MediaPlayerSingleton.positionDurationMusic > MediaPlayerSingleton.DurationTotalMusic - 10) {
+                         try {
+                             val positionUpdate = MediaPlayerSingleton.positionMusic
+                             if (positionUpdate < MediaPlayerSingleton.listMusic.size - 1) {
+                                 MediaPlayerSingleton.positionMusic = positionUpdate + 1
+                                 MediaPlayerSingleton.positionDurationMusic = 0
+                                 MediaPlayerSingleton.playStart(MediaPlayerSingleton.listMusic[MediaPlayerSingleton.positionMusic].path)
+                                 MediaPlayerSingleton.DurationTotalMusic =
+                                     MediaPlayerSingleton.playDuration() / 10
+                             }
+                         } catch (e: Exception) {
+                             e.printStackTrace()
+                         }
+                     }
+                 } catch (e: Exception) {
+                     e.printStackTrace()
+                 }
+             }
+         }
         sleep?.start()
     }
 
@@ -151,9 +152,7 @@ class MusicService : Service() {
 
             override fun onTouch(v: View, event: MotionEvent): Boolean {
                 Log.d("eventFloating", "onTouch")
-                val params = floatingView?.layoutParams as WindowManager.LayoutParams
-                val xCord = event.rawX
-                val yCord = event.rawY
+                val params = floatingView.layoutParams as WindowManager.LayoutParams
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         timeStart = System.currentTimeMillis()
@@ -168,18 +167,13 @@ class MusicService : Service() {
                     }
                     MotionEvent.ACTION_UP -> {
                         timeEnd = System.currentTimeMillis()
-                        val xDiff = xCord - initialTouchX
-                        val yDiff = yCord - initialTouchY
-                        if (abs(xDiff) < 5 && abs(yDiff) < 5 && (timeEnd - timeStart < 300)) {
-
-                        }
                         lastAction = event.action
                         return true
                     }
                     MotionEvent.ACTION_MOVE -> {
                         params.x = initialX + (event.rawX - initialTouchX).toInt()
                         params.y = initialY + (event.rawY - initialTouchY).toInt()
-                        windowManager?.updateViewLayout(floatingView, params)
+                        windowManager.updateViewLayout(floatingView, params)
                         lastAction = event.action
                         return true
                     }

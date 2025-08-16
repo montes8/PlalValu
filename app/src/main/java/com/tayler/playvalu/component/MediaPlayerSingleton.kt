@@ -66,13 +66,4 @@ object MediaPlayerSingleton : MediaPlayer(){
     fun playCurrentPosition(): Int{
         return mediaPlayerSingleton?.currentPosition?:0
     }
-
-    fun playReset(){
-         mediaPlayerSingleton?.reset()
-    }
-
-    fun playSetDuration(duration : Int){
-        mediaPlayerSingleton?.seekTo(duration)
-    }
-
 }

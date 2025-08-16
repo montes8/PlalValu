@@ -15,8 +15,8 @@ android {
         applicationId = "com.tayler.playvalu"
         minSdk = 24
         targetSdk = 35
-        versionCode = 4
-        versionName = "1.0.3"
+        versionCode = 5
+        versionName = "1.0.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -72,10 +72,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-
-
-    implementation("com.google.accompanist:accompanist-permissions:0.29.0-alpha")
-
     implementation("com.airbnb.android:lottie-compose:4.0.0")
 
 
