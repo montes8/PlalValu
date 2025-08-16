@@ -1,6 +1,5 @@
 package com.tayler.playvalu.ui.home
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -53,10 +52,9 @@ fun ScreenHome(viewModel: AppViewModel, paddingValues: PaddingValues) {
         while (viewModel.sliderPosition < viewModel.musicDuration) {
             Thread.sleep((1000).toLong())
             try {
-                viewModel.sliderPosition = (MediaPlayerSingleton.playCurrentPosition()).toFloat()/10
+                viewModel.sliderPosition = (MediaPlayerSingleton.playCurrentPosition()).toFloat()
                 viewModel.textProgress =
                     formatTimePlayer(MediaPlayerSingleton.playCurrentPosition())
-                Log.d("positionCurrent",viewModel.sliderPosition.toString() +"--" + (viewModel.musicDuration -10).toString())
                 if(viewModel.sliderPosition > viewModel.musicDuration -1000){
                     nextMusic(viewModel)
                 }
@@ -245,7 +243,7 @@ fun nextMusic(viewModel: AppViewModel) {
         viewModel.uiStatePosition = positionCurrent + 1
         viewModel.uiStateMusic = viewModel.uiStateDataMusic.listMusic[viewModel.uiStatePosition]
         MediaPlayerSingleton.playStart(viewModel.uiStateMusic.path)
-        viewModel.musicDuration = MediaPlayerSingleton.playDuration()/10
+        viewModel.musicDuration = MediaPlayerSingleton.playDuration()
     }
 }
 

@@ -49,8 +49,8 @@ class MusicService : Service() {
         showOverlay()
         MediaPlayerSingleton.playStartUpdate(MediaPlayerSingleton.listMusic[MediaPlayerSingleton.positionMusic].path
             ,MediaPlayerSingleton.positionDurationMusic)
-        MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()/10
-        MediaPlayerSingleton.DurationTotalMusic = MediaPlayerSingleton.playDuration()/10
+        MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()
+        MediaPlayerSingleton.DurationTotalMusic = MediaPlayerSingleton.playDuration()
         detectedNextMusic()
     }
 
@@ -59,9 +59,9 @@ class MusicService : Service() {
              while (MediaPlayerSingleton.positionDurationMusic < MediaPlayerSingleton.DurationTotalMusic) {
                  Thread.sleep((1000).toLong())
                  MediaPlayerSingleton.positionDurationMusic =
-                     MediaPlayerSingleton.playCurrentPosition() / 10
+                     MediaPlayerSingleton.playCurrentPosition()
                  try {
-                     if (MediaPlayerSingleton.positionDurationMusic > MediaPlayerSingleton.DurationTotalMusic - 10) {
+                     if (MediaPlayerSingleton.positionDurationMusic > MediaPlayerSingleton.DurationTotalMusic - 1000) {
                          try {
                              val positionUpdate = MediaPlayerSingleton.positionMusic
                              if (positionUpdate < MediaPlayerSingleton.listMusic.size - 1) {
@@ -69,7 +69,7 @@ class MusicService : Service() {
                                  MediaPlayerSingleton.positionDurationMusic = 0
                                  MediaPlayerSingleton.playStart(MediaPlayerSingleton.listMusic[MediaPlayerSingleton.positionMusic].path)
                                  MediaPlayerSingleton.DurationTotalMusic =
-                                     MediaPlayerSingleton.playDuration() / 10
+                                     MediaPlayerSingleton.playDuration()
                              }
                          } catch (e: Exception) {
                              e.printStackTrace()
