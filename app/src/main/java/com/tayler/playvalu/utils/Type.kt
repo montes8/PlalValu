@@ -20,11 +20,6 @@ val Typography = Typography(
     )
 )
 
-
-val flexBoldFont = FontFamily(
-    Font(R.font.flex_bold_italic)
-)
-
 val gabbiFont = FontFamily(
     Font(R.font.gabi_regular)
 )
