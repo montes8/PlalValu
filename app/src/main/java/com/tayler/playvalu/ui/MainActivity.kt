@@ -2,23 +2,21 @@ package com.tayler.playvalu.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ContentResolver
-import android.content.ContentUris
 import android.content.Intent
-import android.database.Cursor
-import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewModelScope
 import com.gb.vale.uivalulibrary.manager.permission.UiTayPermissionManager
-import com.gb.vale.uivalulibrary.utils.uiTayHandler
 import com.gb.vale.uivalulibrary.utils.uiTayShowToast
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.tayler.playvalu.R
 import com.tayler.playvalu.component.MediaPlayerSingleton
 import com.tayler.playvalu.component.Navigation
@@ -30,19 +28,19 @@ import com.tayler.playvalu.utils.permission.PermissionManager
 import com.tayler.playvalu.utils.permission.PermissionManager.checkFilePermissionActivity
 import com.tayler.playvalu.utils.validateApiAndroidR
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import kotlin.concurrent.thread
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-
+    private val updateOptions = AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build()
+    private val viewModel: AppViewModel by viewModels()
     val permissionVale : UiTayPermissionManager = UiTayPermissionManager(this, onDeny = {
         uiTayShowToast("Necesitas el permiso para acceder a tu musica")
     })
-    private var onResume = false
-    private val viewModel: AppViewModel by viewModels()
+    companion object {
+        private const val UPDATE_CODE = 10001
+    }
 
     @SuppressLint("ImplicitSamInstance")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +48,8 @@ class MainActivity : ComponentActivity() {
         stopService(Intent(this, MusicService::class.java))
     }
 
-    private fun configInit(resume : Boolean){
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun configInit(){
         checkFilePermissionActivity(this){
             if (it){
                 permissionSuccess()
@@ -59,6 +58,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun validatePermission(){
         val permissions = if(validateApiAndroidR()) {
             arrayOf(Manifest.permission.READ_MEDIA_AUDIO)
@@ -71,9 +71,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onResume() {
         super.onResume()
-        configInit(true)
+        validateVersionUpdate()
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -99,6 +100,31 @@ class MainActivity : ComponentActivity() {
                 })
 
             }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun validateVersionUpdate() {
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(
+                    AppUpdateType.IMMEDIATE
+                )
+            ) {
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    this,
+                    updateOptions,
+                    UPDATE_CODE
+                )
+                finish()
+            } else {
+                configInit()
+            }
+        }
+        appUpdateInfoTask.addOnFailureListener {
+            configInit()
         }
     }
 
