@@ -27,6 +27,7 @@ import com.tayler.playvalu.utils.PlayValuTheme
 import com.tayler.playvalu.utils.permission.PermissionManager
 import com.tayler.playvalu.utils.permission.PermissionManager.checkFilePermissionActivity
 import com.tayler.playvalu.utils.validateApiAndroidR
+import com.tayler.playvalu.utils.validateApiAndroidRP
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -60,12 +61,12 @@ class MainActivity : ComponentActivity() {
     }
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun validatePermission(){
-        val permissions = if(validateApiAndroidR()) {
-            arrayOf(Manifest.permission.READ_MEDIA_AUDIO)
-        } else arrayOf(
+        val permissions = if(validateApiAndroidRP())
+            Manifest.permission.READ_MEDIA_AUDIO
+         else
             Manifest.permission.READ_EXTERNAL_STORAGE
-        )
-        permissionVale.requestPermissions(permissions
+
+        permissionVale.requestPermission(permissions
         ){
             permissionSuccess()
         }

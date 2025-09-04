@@ -33,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tayler.playvalu.R
 import com.tayler.playvalu.component.MediaPlayerSingleton
@@ -50,17 +51,18 @@ fun ScreenHome(viewModel: AppViewModel, paddingValues: PaddingValues) {
     viewModel.loadMusic(context)
     val sleep = Thread {
         while (viewModel.sliderPosition < viewModel.musicDuration) {
-            Thread.sleep((1000).toLong())
-            try {
-                viewModel.sliderPosition = (MediaPlayerSingleton.playCurrentPosition()).toFloat()
-                viewModel.textProgress =
-                    formatTimePlayer(MediaPlayerSingleton.playCurrentPosition())
-                if(viewModel.sliderPosition > viewModel.musicDuration -1000){
-                    nextMusic(viewModel)
+                Thread.sleep((1000).toLong())
+                try {
+                    viewModel.sliderPosition = (MediaPlayerSingleton.playCurrentPosition()).toFloat()
+                    viewModel.textProgress =
+                        formatTimePlayer(MediaPlayerSingleton.playCurrentPosition())
+                    if(viewModel.sliderPosition > viewModel.musicDuration -1000 && viewModel.visibleMusic){
+                            nextMusic(viewModel)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+
         }
     }
 
@@ -152,25 +154,27 @@ fun LadMusicDetail(viewModel: AppViewModel) {
                     .padding(bottom = 12.dp)
                     .fillMaxWidth()
             ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
+                Box(modifier = Modifier.fillMaxWidth(),contentAlignment = Alignment.Center) {
                     Text(
+                        textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(top = 16.dp, start = 12.dp, end = 12.dp),
+                            .align(Alignment.Center)
+                            .padding(top = 24.dp, start = 12.dp, end = 12.dp),
+
                         text = viewModel.uiStateMusic.name.replace(".mp3", ""),
-                        maxLines = 1,
+                        maxLines = 2,
                         color = colorResource(R.color.ui_tay_black),
                         style = TypographySubTitleGabbi.labelMedium,
                     )
                     Image(
                         painterResource(R.drawable.ic_close),
                         modifier = Modifier
-                            .align(Alignment.TopEnd)
+                            .align(Alignment.TopEnd).padding(2.dp)
                             .clickable {
-                                viewModel.visibleMusic = false
-                                viewModel.sliderPosition = 0f
-                                viewModel.musicDuration = 0
                                 MediaPlayerSingleton.playStop()
+                                viewModel.visibleMusic = false
+                                viewModel.musicDuration = 0
+                                viewModel.sliderPosition = 0f
                             },
                         contentDescription = "closeMusic",
                         contentScale = ContentScale.Crop
@@ -178,7 +182,7 @@ fun LadMusicDetail(viewModel: AppViewModel) {
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                     horizontalArrangement = Arrangement.Center,
                 ) {
                     Text(

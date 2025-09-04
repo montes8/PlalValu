@@ -23,6 +23,9 @@ fun formatTimePlayer(time :Int): String{
 
 fun validateApiAndroidR() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 
+fun validateApiAndroidRP() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+
+
 fun getFileMusicDeprecated():ArrayList<MusicModel>{
     val listFilter : ArrayList<MusicModel> = ArrayList()
     val songs = getMusic(Environment.getExternalStorageDirectory())
