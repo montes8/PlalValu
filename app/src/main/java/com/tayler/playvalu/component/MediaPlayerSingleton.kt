@@ -3,67 +3,70 @@ package com.tayler.playvalu.component
 import android.media.MediaPlayer
 import com.tayler.playvalu.model.MusicModel
 
-object MediaPlayerSingleton : MediaPlayer(){
+object MediaPlayerSingleton {
 
-    var mediaPlayerSingleton   :MediaPlayer?=null
-    var listMusic : List<MusicModel> = arrayListOf()
+    var mediaPlayer: MediaPlayer? = null
+    var listMusic: List<MusicModel> = arrayListOf()
     var positionMusic = 0
     var positionDurationMusic = 0
     var DurationTotalMusic = 0
 
-    fun playStart(path : String){
-        if(path.isNotEmpty()){
+    fun playStart(path: String) {
+        if (path.isNotEmpty()) {
             playStop()
-            mediaPlayerSingleton = MediaPlayer()
-            mediaPlayerSingleton?.setDataSource(path)
-            mediaPlayerSingleton?.prepare()
-            mediaPlayerSingleton?.start()
-
-        }
-    }
-
-    fun playStartUpdate(path : String,time : Int){
-        if(path.isNotEmpty()){
-            playStop()
-            mediaPlayerSingleton = MediaPlayer()
-            mediaPlayerSingleton?.setDataSource(path)
-            mediaPlayerSingleton?.prepare()
-            mediaPlayerSingleton?.seekTo(time)
-            mediaPlayerSingleton?.start()
-
-        }
-    }
-
-    fun playStop(){
-        mediaPlayerSingleton.apply {
-            mediaPlayerSingleton?.stop()
-        }
-    }
-
-    fun playPause(){
-        mediaPlayerSingleton.apply {
-            mediaPlayerSingleton?.pause()
-        }
-    }
-    fun playMusic(){
-        mediaPlayerSingleton.apply {
-            mediaPlayerSingleton?.start()
-        }
-    }
-
-    fun playStateMusic(value : Boolean){
-            if (value){
-                playPause()
-            }else{
-                playMusic()
+            mediaPlayer = MediaPlayer().apply {
+                setDataSource(path)
+                prepare()
+                start()
             }
+        }
     }
 
-    fun playDuration(): Int{
-        return mediaPlayerSingleton?.duration?:0
+    fun playStartUpdate(path: String, duration: Int) {
+        if (path.isNotEmpty()) {
+            playStop()
+            mediaPlayer = MediaPlayer().apply {
+                setDataSource(path)
+                prepare()
+                seekTo(duration)
+                start()
+            }
+        }
     }
 
-    fun playCurrentPosition(): Int{
-        return mediaPlayerSingleton?.currentPosition?:0
+    fun playStop() {
+        mediaPlayer?.let {
+            if (it.isPlaying) it.stop()
+            it.release()
+        }
+        mediaPlayer = null
+    }
+
+    fun playPause() {
+        mediaPlayer?.pause()
+    }
+
+    fun playMusic() {
+        mediaPlayer?.start()
+    }
+
+    fun playStateMusic(isPlaying: Boolean) {
+        if (isPlaying) {
+            playPause()
+        } else {
+            playMusic()
+        }
+    }
+
+    fun playDuration(): Int {
+        return mediaPlayer?.duration ?: 0
+    }
+
+    fun playCurrentPosition(): Int {
+        return mediaPlayer?.currentPosition ?: 0
+    }
+
+    fun seekTo(position: Int) {
+        mediaPlayer?.seekTo(position)
     }
 }

@@ -20,6 +20,7 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.tayler.playvalu.R
 import com.tayler.playvalu.component.MediaPlayerSingleton
 import com.tayler.playvalu.component.Navigation
 import com.tayler.playvalu.ui.service.MusicService
@@ -32,10 +33,8 @@ import com.valu.uitaycompose.model.UiToolBarModel
 import com.valu.uitaycompose.utils.extension.uiTayShowToast
 import com.valu.uitaycompose.utils.permission.UiTayPermissionController
 import com.valu.uitaycompose.utils.permission.rememberUiTayPermissionManager
-import dagger.hilt.android.AndroidEntryPoint
-import com.tayler.playvalu.R
 import com.valu.uitaycompose.utils.tay_pink_200
-import com.valu.uitaycompose.utils.tay_pink_400
+import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -66,33 +65,32 @@ class MainActivity : ComponentActivity() {
             }
 
             PlayValuTheme {
-                if (hasPermission) {
-                    Scaffold(topBar = {
-                        if (viewModel.visibleToolbar) {
-                            UiTayCToolBar(
-                                uiTayText = stringResource(R.string.text_sub_title_splash),
-                                uiTayModifier = UiToolBarModel()
-                                    .backgroundColor(tay_pink_200)
-                                    .textColor(Color.White)
-                                    .iconEnd(R.drawable.ui_ic_minimimize)
-                                    .useOriginalTint(true)
-                                    .showStartIcon(false)
-                                    .showEndIcon(true)
-                                    .setIconSize(24.dp)
-                            ) {
-                                MediaPlayerSingleton.positionMusic = viewModel.uiStatePosition
-                                MediaPlayerSingleton.positionDurationMusic = MediaPlayerSingleton.playCurrentPosition()
-                                PermissionManager.checkOverlayPermission(this@MainActivity) {
-                                    startService(Intent(this@MainActivity, MusicService::class.java))
-                                    MediaPlayerSingleton.playStop()
-                                    finish()
-                                }
+                Scaffold(topBar = {
+                    if (viewModel.visibleToolbar) {
+                        UiTayCToolBar(
+                            uiTayText = stringResource(R.string.text_sub_title_splash),
+                            uiTayModifier = UiToolBarModel()
+                                .backgroundColor(tay_pink_200)
+                                .textColor(Color.White)
+                                .iconEnd(R.drawable.ui_ic_minimimize)
+                                .useOriginalTint(true)
+                                .showStartIcon(false)
+                                .showEndIcon(true)
+                                .setIconSize(24.dp)
+                        ) {
+                            MediaPlayerSingleton.positionMusic = viewModel.uiStatePosition
+                            MediaPlayerSingleton.positionDurationMusic =
+                                MediaPlayerSingleton.playCurrentPosition()
+                            PermissionManager.checkOverlayPermission(this@MainActivity) {
+                                startService(Intent(this@MainActivity, MusicService::class.java))
+                                MediaPlayerSingleton.playStop()
+                                finish()
                             }
                         }
-                    }, content = { paddingValues ->
-                        Navigation(viewModel, paddingValues)
-                    })
-                }
+                    }
+                }, content = { paddingValues ->
+                    Navigation(viewModel, paddingValues)
+                })
             }
         }
     }

@@ -1,7 +1,5 @@
 package com.tayler.playvalu.ui.splash
 
-import android.os.Handler
-import android.os.Looper
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -36,16 +33,17 @@ import com.tayler.playvalu.BuildConfig
 import com.tayler.playvalu.R
 import com.tayler.playvalu.ui.AppViewModel
 import com.valu.uitaycompose.utils.UI_EMPTY
-import com.valu.uitaycompose.utils.tay_pink_400
+import com.valu.uitaycompose.utils.tay_pink_600
 import com.valu.uitaycompose.utils.textM10
-import com.valu.uitaycompose.utils.textPenny25
+import com.valu.uitaycompose.utils.textPenny35
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun ScreenSplash(viewModel: AppViewModel,onNavigateToMain: () -> Unit) {
+fun ScreenSplash(viewModel: AppViewModel, onNavigateToMain: () -> Unit) {
 
     var animLotti by remember { mutableStateOf(false) }
     var animText by remember { mutableStateOf(false) }
+
     val offset by animateDpAsState(
         targetValue = if (animLotti) 0.dp else (-500).dp,
         animationSpec = tween(
@@ -64,13 +62,10 @@ fun ScreenSplash(viewModel: AppViewModel,onNavigateToMain: () -> Unit) {
         label = "Animation bottom"
     )
 
-    Handler(Looper.getMainLooper()).postDelayed({
+    LaunchedEffect(Unit) {
         animText = true
-        animLotti = true },100)
-
-
-    viewModel.loadValidateLogin()
-    LaunchedEffect(key1 = true) {
+        animLotti = true
+        viewModel.loadValidateLogin()
         viewModel.eventFlow.collectLatest { event ->
             if (event is InitUiEvent.NavigateToNext) {
                 onNavigateToMain.invoke()
@@ -78,61 +73,63 @@ fun ScreenSplash(viewModel: AppViewModel,onNavigateToMain: () -> Unit) {
         }
     }
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .paint(
-                painterResource(id = R.drawable.background_splash), contentScale
-                = ContentScale.FillBounds
+                painterResource(id = R.drawable.background_splash),
+                contentScale = ContentScale.FillBounds
             ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             modifier = Modifier
-                .fillMaxWidth().padding(end = 16.dp),
+                .fillMaxWidth()
+                .padding(end = 16.dp),
             color = Color.Black,
             text = BuildConfig.VERSION_NAME,
             textAlign = TextAlign.End,
             style = textM10,
+        )
 
-            )
         Image(
             painterResource(R.drawable.ic_music_bg),
-            contentDescription = "",
+            contentDescription = UI_EMPTY,
             contentScale = ContentScale.Crop
         )
 
-        Box( modifier = Modifier
-            .offset(y = offset)
-            .graphicsLayer()) {
+        Box(
+            modifier = Modifier
+                .graphicsLayer { translationY = offset.toPx() }
+        ) {
             Image(
                 painter = painterResource(R.drawable.ui_icon_play),
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(120.dp)
                     .testTag("splash_bag_image"),
-                contentDescription = "Logo de la bolsa"
+                contentDescription = "Logo"
             )
         }
 
-        Column(modifier = Modifier
-            .offset(y = offsetBottom)
-            .graphicsLayer(),horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier
+                .graphicsLayer { translationY = offsetBottom.toPx() },
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
                 modifier = Modifier.padding(top = 25.dp),
                 text = stringResource(R.string.text_title_splash),
                 textAlign = TextAlign.Center,
-                style = textPenny25,
-                color = tay_pink_400
+                style = textPenny35,
+                color = tay_pink_600
             )
             Text(
                 modifier = Modifier.padding(top = 4.dp),
-                color =tay_pink_400,
+                color = tay_pink_600,
                 text = stringResource(R.string.text_sub_title_splash),
                 textAlign = TextAlign.Center,
-                style = textPenny25,
-
+                style = textPenny35,
             )
         }
 
