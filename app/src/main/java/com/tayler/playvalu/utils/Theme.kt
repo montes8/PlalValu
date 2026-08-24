@@ -3,23 +3,20 @@ package com.tayler.playvalu.utils
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-
-private val DarkColorScheme = darkColorScheme(
-    primary = primaryAccent,
-    secondary = primaryAccent,
-    tertiary = primaryAccent
-)
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.valu.uitaycompose.utils.tay_pink_400
 
 private val LightColorScheme = lightColorScheme(
-    primary = primaryAccent,
-    secondary = primaryAccent,
-    tertiary = primaryAccent
+    primary = tay_pink_400,
+    secondary = tay_pink_400,
+    tertiary = tay_pink_400
 )
 
 @Composable
@@ -43,3 +40,13 @@ fun PlayValuTheme(
       content = content
     )
 }
+
+val Typography = androidx.compose.material3.Typography(
+    bodyLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    )
+)

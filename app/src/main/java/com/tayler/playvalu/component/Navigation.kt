@@ -1,6 +1,7 @@
 package com.tayler.playvalu.component
 
-import androidx.activity.compose.BackHandler
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -16,22 +17,22 @@ fun Navigation(viewModel: AppViewModel,paddingValues: PaddingValues) {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen.route,
-        route = ROOT_GRAPH_ROUTE) {
-
-        composable(route = Screen.SplashScreen.route) {
-            BackHandler(true) {
-                // Or do nothing
+        startDestination = Screen.SplashScreen,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None }
+    ) {
+        composable<Screen.SplashScreen> {
+            ScreenSplash(viewModel) {
+                navController.navigate(Screen.HomeScreen) {
+                    popUpTo(Screen.SplashScreen) { inclusive = true }
+                }
             }
-            ScreenSplash(viewModel, navController = navController)
         }
 
-        composable(route = Screen.HomeScreen.route) {
-            BackHandler(true) {
-                // Or do nothing
-            }
+        composable<Screen.HomeScreen> {
             ScreenHome(viewModel,paddingValues)
         }
+
     }
 
 }

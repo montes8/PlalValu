@@ -1,10 +1,13 @@
 package com.tayler.playvalu.component
 
-const val ROOT_GRAPH_ROUTE = "root"
+import kotlinx.serialization.Serializable
 
-sealed class Screen (open val route: String) {
-    object HomeScreen : Screen("home_screen")
-    object SplashScreen : Screen("splash_screen")
+@Serializable
+sealed interface Screen {
+    @Serializable
+    object HomeScreen : Screen
+    @Serializable
+    object SplashScreen : Screen
 }
 
 

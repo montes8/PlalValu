@@ -1,9 +1,9 @@
 package com.tayler.playvalu.repository
 
 import android.content.SharedPreferences
-import com.tayler.playvalu.utils.EMPTY
 import javax.inject.Inject
 import androidx.core.content.edit
+import com.valu.uitaycompose.utils.UI_EMPTY
 
 class PreferencesManager @Inject constructor(private val preferences : SharedPreferences){
 
@@ -19,6 +19,6 @@ class PreferencesManager @Inject constructor(private val preferences : SharedPre
         preferences.edit { putInt(key, value) }
     }
 
-    fun getString(key : String) : String = preferences.getString(key, EMPTY)?: EMPTY
+    fun getString(key : String) : String = preferences.getString(key, UI_EMPTY)?: UI_EMPTY
 
 }

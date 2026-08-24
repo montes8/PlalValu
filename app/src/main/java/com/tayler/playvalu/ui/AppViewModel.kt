@@ -18,6 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
@@ -40,7 +41,7 @@ class AppViewModel @Inject constructor(
 
     fun loadValidateLogin(){
         execute {
-            delay(4000)
+            delay(4000.milliseconds)
             _eventFlow.emit(InitUiEvent.NavigateToNext())
         }
     }

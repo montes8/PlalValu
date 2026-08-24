@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,9 +39,9 @@ import com.tayler.playvalu.component.MediaPlayerSingleton
 import com.tayler.playvalu.component.MediaPlayerSingleton.playStateMusic
 import com.tayler.playvalu.model.MusicModel
 import com.tayler.playvalu.ui.AppViewModel
-import com.tayler.playvalu.utils.TypographySubTitleGabbi
-import com.tayler.playvalu.utils.TypographyTitleBold
 import com.tayler.playvalu.utils.formatTimePlayer
+import com.valu.uitaycompose.utils.tay_pink_400
+import com.valu.uitaycompose.utils.textGabbi14
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,7 +83,7 @@ fun ScreenHome(viewModel: AppViewModel, paddingValues: PaddingValues) {
                 modifier = Modifier
                     .background(Color.White)
                     .wrapContentSize(),
-                color = colorResource(R.color.primary_pink)
+                color = tay_pink_400
             )
         }
     }
@@ -118,8 +117,8 @@ fun ScreenHome(viewModel: AppViewModel, paddingValues: PaddingValues) {
                     modifier = Modifier,
                     text = "No se encontro musica para reproducir",
                     maxLines = 1,
-                    color = colorResource(R.color.ui_tay_black),
-                    style = TypographySubTitleGabbi.labelMedium,
+                    color = Color.Black,
+                    style = textGabbi14,
                 )
             }
         }
@@ -143,7 +142,7 @@ fun LadMusicDetail(viewModel: AppViewModel) {
             colors = CardDefaults.cardColors(
                 containerColor = Color.White, contentColor = Color.White
             ),
-            border = BorderStroke(width = 2.dp, color = colorResource(R.color.primary_pink)),
+            border = BorderStroke(width = 2.dp, color = tay_pink_400),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
@@ -163,8 +162,8 @@ fun LadMusicDetail(viewModel: AppViewModel) {
 
                         text = viewModel.uiStateMusic.name.replace(".mp3", ""),
                         maxLines = 2,
-                        color = colorResource(R.color.ui_tay_black),
-                        style = TypographySubTitleGabbi.labelMedium,
+                        color = Color.Black,
+                        style =textGabbi14,
                     )
                     Image(
                         painterResource(R.drawable.ic_close),
@@ -191,8 +190,8 @@ fun LadMusicDetail(viewModel: AppViewModel) {
                             .width(40.dp),
                         text = viewModel.textProgress,
                         maxLines = 1,
-                        color = colorResource(R.color.ui_tay_black),
-                        style = TypographySubTitleGabbi.labelSmall
+                        color = Color.Black,
+                        style = textGabbi14
                     )
                     Image(
                         painterResource(R.drawable.ic_skip_previous),
@@ -229,8 +228,8 @@ fun LadMusicDetail(viewModel: AppViewModel) {
                         modifier = Modifier.align(Alignment.CenterVertically),
                         text = formatTimePlayer(MediaPlayerSingleton.playDuration()),
                         maxLines = 1,
-                        color = colorResource(R.color.ui_tay_black),
-                        style = TypographySubTitleGabbi.labelSmall
+                        color = Color.Black,
+                        style = textGabbi14
                     )
                 }
             }
@@ -309,15 +308,15 @@ fun MusicItem(model: MusicModel, position: Int, onClick: (Int) -> Unit) {
                 Text(
                     text = "Nombre de cancion",
                     maxLines = 1,
-                    color = colorResource(R.color.primary_Accent),
-                    style = TypographyTitleBold.labelLarge
+                    color = tay_pink_400,
+                    style = textGabbi14
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = model.name.replace(".mp3", ""),
                     maxLines = 2,
-                    color = colorResource(R.color.ui_tay_black),
-                    style = TypographySubTitleGabbi.titleMedium
+                    color = Color.Black,
+                    style = textGabbi14
                 )
             }
             Image(

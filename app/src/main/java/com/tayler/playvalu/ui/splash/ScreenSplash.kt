@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,30 +27,29 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.tayler.playvalu.BuildConfig
 import com.tayler.playvalu.R
-import com.tayler.playvalu.component.Screen
 import com.tayler.playvalu.ui.AppViewModel
-import com.tayler.playvalu.utils.TypographySubTitleGabbi
-import com.tayler.playvalu.utils.TypographyTitleBold
+import com.valu.uitaycompose.utils.UI_EMPTY
+import com.valu.uitaycompose.utils.tay_pink_400
+import com.valu.uitaycompose.utils.textM10
+import com.valu.uitaycompose.utils.textPenny25
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun ScreenSplash(viewModel: AppViewModel, navController: NavController = rememberNavController()) {
+fun ScreenSplash(viewModel: AppViewModel,onNavigateToMain: () -> Unit) {
 
     var animLotti by remember { mutableStateOf(false) }
     var animText by remember { mutableStateOf(false) }
     val offset by animateDpAsState(
         targetValue = if (animLotti) 0.dp else (-500).dp,
         animationSpec = tween(
-            durationMillis = 2500,
+            durationMillis = 1000,
             easing = LinearEasing
         ),
         label = "Animation top"
@@ -58,7 +58,7 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
     val offsetBottom by animateDpAsState(
         targetValue = if (animText) (-30).dp else (500).dp,
         animationSpec = tween(
-            durationMillis = 1500,
+            durationMillis = 1000,
             easing = LinearEasing
         ),
         label = "Animation bottom"
@@ -73,9 +73,7 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             if (event is InitUiEvent.NavigateToNext) {
-                navController.navigate(Screen.HomeScreen.route){
-                    launchSingleTop = true
-                }
+                onNavigateToMain.invoke()
             }
         }
     }
@@ -97,7 +95,7 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
             color = Color.Black,
             text = BuildConfig.VERSION_NAME,
             textAlign = TextAlign.End,
-            style = TypographySubTitleGabbi.labelSmall,
+            style = textM10,
 
             )
         Image(
@@ -109,31 +107,38 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
         Box( modifier = Modifier
             .offset(y = offset)
             .graphicsLayer()) {
-            //AnimatedLotti(modifier = Modifier.width(250.dp).height(200.dp).align(Alignment.Center))
+            Image(
+                painter = painterResource(R.drawable.ui_icon_play),
+                modifier = Modifier
+                    .size(100.dp)
+                    .testTag("splash_bag_image"),
+                contentDescription = "Logo de la bolsa"
+            )
         }
 
         Column(modifier = Modifier
             .offset(y = offsetBottom)
             .graphicsLayer(),horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
+                modifier = Modifier.padding(top = 25.dp),
                 text = stringResource(R.string.text_title_splash),
                 textAlign = TextAlign.Center,
-                style = TypographyTitleBold.titleLarge,
-                color = colorResource(R.color.primary_Accent)
+                style = textPenny25,
+                color = tay_pink_400
             )
             Text(
-                modifier = Modifier.padding(top = 10.dp),
-                color = colorResource(R.color.primary_Accent),
+                modifier = Modifier.padding(top = 4.dp),
+                color =tay_pink_400,
                 text = stringResource(R.string.text_sub_title_splash),
                 textAlign = TextAlign.Center,
-                style = TypographyTitleBold.titleLarge,
+                style = textPenny25,
 
             )
         }
 
         Image(
             painterResource(R.drawable.ic_music_bg),
-            contentDescription = "",
+            contentDescription = UI_EMPTY,
             contentScale = ContentScale.Crop
         )
     }
