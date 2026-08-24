@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
@@ -23,6 +24,7 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.tayler.playvalu.R
 import com.tayler.playvalu.component.MediaPlayerSingleton
 import com.tayler.playvalu.component.Navigation
+import com.tayler.playvalu.component.Screen
 import com.tayler.playvalu.ui.service.MusicService
 import com.tayler.playvalu.utils.PlayValuTheme
 import com.tayler.playvalu.utils.permission.PermissionManager
@@ -52,6 +54,7 @@ class MainActivity : ComponentActivity() {
         stopService(Intent(this, MusicService::class.java))
 
         setContent {
+            val navController = rememberNavController()
             val permissionVale = rememberUiTayPermissionManager(onDeny = {
                 uiTayShowToast(R.string.text_error_permission)
             })
@@ -77,19 +80,24 @@ class MainActivity : ComponentActivity() {
                                 .showStartIcon(false)
                                 .showEndIcon(true)
                                 .setIconSize(24.dp)
-                        ) {
-                            MediaPlayerSingleton.positionMusic = viewModel.uiStatePosition
-                            MediaPlayerSingleton.positionDurationMusic =
-                                MediaPlayerSingleton.playCurrentPosition()
-                            PermissionManager.checkOverlayPermission(this@MainActivity) {
-                                startService(Intent(this@MainActivity, MusicService::class.java))
-                                MediaPlayerSingleton.playStop()
-                                finish()
+                        ) {value ->
+                            if (value){
+                               navController.navigate(Screen.SearchScreen)
+                            }else{
+                                MediaPlayerSingleton.positionMusic = viewModel.uiStatePosition
+                                MediaPlayerSingleton.positionDurationMusic =
+                                    MediaPlayerSingleton.playCurrentPosition()
+                                PermissionManager.checkOverlayPermission(this@MainActivity) {
+                                    startService(Intent(this@MainActivity, MusicService::class.java))
+                                    MediaPlayerSingleton.playStop()
+                                    finish()
+                                }
                             }
+
                         }
                     }
                 }, content = { paddingValues ->
-                    Navigation(viewModel, paddingValues)
+                    Navigation(navController, viewModel, paddingValues)
                 })
             }
         }

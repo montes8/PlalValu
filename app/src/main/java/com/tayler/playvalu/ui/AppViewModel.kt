@@ -9,11 +9,13 @@ import androidx.compose.runtime.setValue
 import com.tayler.playvalu.component.MediaPlayerSingleton
 import com.tayler.playvalu.model.MusicModel
 import com.tayler.playvalu.ui.home.MusicUiState
+import com.tayler.playvalu.ui.search.SearchUiState
 import com.tayler.playvalu.ui.splash.InitUiEvent
 import com.tayler.playvalu.utils.getFileMusic
 import com.tayler.playvalu.utils.getFileMusicDeprecated
 import com.tayler.playvalu.utils.validateApiAndroidR
 import androidx.lifecycle.viewModelScope
+import com.tayler.playvalu.repository.search.SearchRepository
 import com.tayler.playvalu.utils.formatTimePlayer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -26,12 +28,14 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
+    private val searchRepository: SearchRepository
 ):BaseViewModel() {
 
 
     private val _eventFlow = MutableSharedFlow<InitUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
     var uiStateDataMusic by mutableStateOf(MusicUiState())
+    var uiStateSearch by mutableStateOf(SearchUiState())
     var uiStateMusic by mutableStateOf(MusicModel())
     var uiStatePosition by mutableIntStateOf(0)
     var musicDuration by mutableIntStateOf(0)
@@ -122,6 +126,37 @@ class AppViewModel @Inject constructor(
             uiStateDataMusic = uiStateDataMusic.copy(listMusic = listFilter,uiStateLoading = false)
             visibleMusicEmpty = listFilter.isEmpty()
         }
+    }
+
+    fun searchMusic(query: String) {
+        uiStateSearch = uiStateSearch.copy(uiStateLoading = true, uiStateError = null)
+        execute {
+            try {
+                val response = searchRepository.searchMusic(query)
+                uiStateSearch = uiStateSearch.copy(
+                    listSearch = response.results,
+                    uiStateLoading = false
+                )
+            } catch (e: Exception) {
+                uiStateSearch = uiStateSearch.copy(
+                    uiStateLoading = false,
+                    uiStateError = e.message
+                )
+            }
+        }
+    }
+
+    fun playMusicOnline(track: com.tayler.playvalu.model.JamendoTrack) {
+        visibleMusic = true
+        stateMusic = true
+        uiStateMusic = MusicModel(
+            name = track.name,
+            path = track.audio,
+            play = true
+        )
+        MediaPlayerSingleton.playStart(track.audio)
+        musicDuration = MediaPlayerSingleton.playDuration()
+        startProgressTimer()
     }
 }
 

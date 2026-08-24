@@ -4,16 +4,20 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.tayler.playvalu.ui.AppViewModel
 import com.tayler.playvalu.ui.home.ScreenHome
+import com.tayler.playvalu.ui.search.ScreenSearch
 import com.tayler.playvalu.ui.splash.ScreenSplash
 
 @Composable
-fun Navigation(viewModel: AppViewModel,paddingValues: PaddingValues) {
-    val navController = rememberNavController()
+fun Navigation(
+    navController: NavHostController,
+    viewModel: AppViewModel,
+    paddingValues: PaddingValues
+) {
 
     NavHost(
         navController = navController,
@@ -30,7 +34,11 @@ fun Navigation(viewModel: AppViewModel,paddingValues: PaddingValues) {
         }
 
         composable<Screen.HomeScreen> {
-            ScreenHome(viewModel,paddingValues)
+            ScreenHome(viewModel, paddingValues)
+        }
+
+        composable<Screen.SearchScreen> {
+            ScreenSearch(viewModel, paddingValues)
         }
 
     }

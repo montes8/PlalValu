@@ -8,6 +8,8 @@ sealed interface Screen {
     object HomeScreen : Screen
     @Serializable
     object SplashScreen : Screen
+    @Serializable
+    object SearchScreen : Screen
 }
 
 
