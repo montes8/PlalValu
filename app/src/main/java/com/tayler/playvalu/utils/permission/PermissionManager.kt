@@ -8,7 +8,7 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import com.tayler.playvalu.utils.validateApiAndroidR
+import com.tayler.playvalu.utils.validateApiAndroidRP
 
 
 object PermissionManager {
@@ -27,7 +27,7 @@ object PermissionManager {
     }
 
     fun checkFilePermissionActivity(context: ComponentActivity,onClick: (Boolean) -> Unit){
-        if (validateApiAndroidR()) {
+        if (validateApiAndroidRP()) {
             if (ContextCompat.checkSelfPermission(
                     context, Manifest.permission.READ_MEDIA_AUDIO
                 ) == PackageManager.PERMISSION_GRANTED

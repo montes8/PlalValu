@@ -1,20 +1,23 @@
+import com.android.build.api.dsl.ApplicationExtension
+import org.gradle.kotlin.dsl.configure
+
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
-    kotlin("kapt")
+    alias(libs.plugins.composeCompiler)
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.serialization)
 }
 
-android {
+configure<ApplicationExtension> {
     namespace = "com.tayler.playvalu"
-    compileSdk = 35
+    compileSdk = 37
+    ndkVersion = "30.0.15729638"
 
     defaultConfig {
         applicationId = "com.tayler.playvalu"
-        minSdk = 24
-        targetSdk = 35
+        minSdk = 25
+        targetSdk = 37
         versionCode = 9
         versionName = "1.0.8"
 
@@ -22,73 +25,85 @@ android {
     }
 
     signingConfigs {
-        create("release") {
+        create("config") {
+            keyAlias =  "PlayValu"
+            keyPassword = "@playvalu2025"
             storeFile = file("../keystore/playvalu.jks")
             storePassword = "@playvalu2025"
-            keyAlias = "PlayValu"
-            keyPassword = "@playvalu2025"
         }
     }
+
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
+            ndk.debugSymbolLevel = "FULL"
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("config")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            isDebuggable = false
         }
-        debug{
-            isMinifyEnabled = false
+        debug {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            isDebuggable = true
+            enableUnitTestCoverage = true
+        }
+    }
+
+    packaging {
+        jniLibs {
+            keepDebugSymbols.add("**/*.so")
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+
     buildFeatures {
         compose = true
         buildConfig = true
+        resValues = true
     }
 }
 
 dependencies {
 
+    implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation("androidx.compose.material3:material3:1.0.0-beta03")
-    implementation("androidx.navigation:navigation-compose:2.9.0")
-    implementation("com.github.montes8:uivalulibrary:1.0.0")
-    implementation("com.google.android.play:app-update-ktx:2.1.0")
-    // hilt
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation ("androidx.lifecycle:lifecycle-process:2.4.1")
-    implementation("com.google.dagger:hilt-android:2.48")
-    implementation(libs.androidx.appcompat)
+    implementation(libs.compose.material3)
     implementation(libs.material)
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
-    implementation("com.airbnb.android:lottie-compose:4.0.0")
+    implementation(libs.androidx.lifecycle.process)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.google.play.update)
+    // hilt
 
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.google.code.gson)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
+    implementation(libs.tay.compose.library)
+
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }

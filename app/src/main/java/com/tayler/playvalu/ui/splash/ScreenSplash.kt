@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,7 +35,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.tayler.playvalu.BuildConfig
 import com.tayler.playvalu.R
-import com.tayler.playvalu.component.AnimatedLotti
 import com.tayler.playvalu.component.Screen
 import com.tayler.playvalu.ui.AppViewModel
 import com.tayler.playvalu.utils.TypographySubTitleGabbi
@@ -112,7 +109,7 @@ fun ScreenSplash(viewModel: AppViewModel, navController: NavController = remembe
         Box( modifier = Modifier
             .offset(y = offset)
             .graphicsLayer()) {
-            AnimatedLotti(modifier = Modifier.width(250.dp).height(200.dp).align(Alignment.Center))
+            //AnimatedLotti(modifier = Modifier.width(250.dp).height(200.dp).align(Alignment.Center))
         }
 
         Column(modifier = Modifier

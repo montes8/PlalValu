@@ -1,5 +1,22 @@
+# --- Credenciales y Firmas ---
+gradle.properties
+local.properties
+keystore.properties
+*.jks
+*.keystore
 *.iml
+
+# --- Android / Gradle ---
 .gradle
+/build/
+**/build/
+
+# --- IDE (Android Studio / IntelliJ) ---
+.idea/
+.DS_Store
+/uitaycompose/
+
+
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -7,9 +24,7 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-.DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
-local.properties
